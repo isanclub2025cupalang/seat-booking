@@ -1,0 +1,178 @@
+<<!DOCTYPE html>
+<html>
+<head>
+  <title>Seat Booking</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 70px);
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .seat {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      border: none;
+      background-color: lightgreen;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .selected {
+      background-color: orange;
+    }
+
+    .booked {
+      background-color: red;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>เลือกที่นั่ง (5x4)</h1>
+
+  <div class="grid">
+
+    <!-- แถว A -->
+    <button class="seat" onclick="changeColor(this)">A1</button>
+    <button class="seat" onclick="changeColor(this)">A2</button>
+    <button class="seat" onclick="changeColor(this)">A3</button>
+    <button class="seat" onclick="changeColor(this)">A4</button>
+
+    <!-- แถว B -->
+    <button class="seat" onclick="changeColor(this)">B1</button>
+    <button class="seat" onclick="changeColor(this)">B2</button>
+    <button class="seat" onclick="changeColor(this)">B3</button>
+    <button class="seat" onclick="changeColor(this)">B4</button>
+
+    <!-- แถว C -->
+    <button class="seat" onclick="changeColor(this)">C1</button>
+    <button class="seat" onclick="changeColor(this)">C2</button>
+    <button class="seat" onclick="changeColor(this)">C3</button>
+    <button class="seat" onclick="changeColor(this)">C4</button>
+
+    <!-- แถว D -->
+    <button class="seat" onclick="changeColor(this)">D1</button>
+    <button class="seat" onclick="changeColor(this)">D2</button>
+    <button class="seat" onclick="changeColor(this)">D3</button>
+    <button class="seat" onclick="changeColor(this)">D4</button>
+
+    <!-- แถว E -->
+    <button class="seat" onclick="changeColor(this)">E1</button>
+    <button class="seat" onclick="changeColor(this)">E2</button>
+    <button class="seat" onclick="changeColor(this)">E3</button>
+    <button class="seat" onclick="changeColor(this)">E4</button>
+
+  </div>
+<br><br>
+<label>ชื่อผู้จอง:</label>
+<input type="text" id="customerName" placeholder="กรอกชื่อที่นี่">
+<br><br>
+<button onclick="confirmBooking()">ยืนยันการจอง</button>
+
+  <script>
+    window.onload = function() {
+      const bookedSeats = JSON.parse(localStorage.getItem("bookedSeats")) || [];
+      const seats = document.querySelectorAll(".seat");
+
+      seats.forEach(seat => {
+        if (bookedSeats.includes(seat.innerText)) {
+          seat.classList.add("booked");
+        }
+      });
+    };
+
+    function changeColor(button) {
+      if (button.classList.contains("booked")) {
+        return;
+      }
+
+      button.classList.toggle("selected");
+    }
+
+    function confirmSeat() {
+      const selectedSeats = document.querySelectorAll(".selected");
+
+      if (selectedSeats.length === 0) {
+        alert("กรุณาเลือกที่นั่งก่อน");
+        return;
+      }
+
+      const bookedSeats = JSON.parse(localStorage.getItem("bookedSeats")) || [];
+
+      selectedSeats.forEach(seat => {
+        seat.classList.remove("selected");
+        seat.classList.add("booked");
+        bookedSeats.push(seat.innerText);
+      });
+
+      localStorage.setItem("bookedSeats", JSON.stringify(bookedSeats));
+
+      alert("จองสำเร็จ " + selectedSeats.length + " ที่นั่ง");
+    }
+    function confirmBooking() {
+    const name = document.getElementById("customerName").value.trim();
+
+    if (name === "") {
+        alert("กรุณากรอกชื่อผู้จองก่อน");
+        return;
+    }
+
+    const selectedSeats = document.querySelectorAll(".selected");
+
+    if (selectedSeats.length === 0) {
+        alert("กรุณาเลือกที่นั่งก่อน");
+        return;
+    }
+
+    let bookedSeats = JSON.parse(localStorage.getItem("bookedSeats")) || [];
+
+    selectedSeats.forEach(seat => {
+    seat.classList.remove("selected");
+    seat.classList.add("booked");
+
+    seat.title = "จองโดย: " + name;   // 👈 เพิ่มบรรทัดนี้
+
+    bookedSeats.push({
+        seat: seat.innerText,
+        name: name
+    });
+    });
+
+    localStorage.setItem("bookedSeats", JSON.stringify(bookedSeats));
+
+    alert("จองสำเร็จโดย: " + name);
+
+    document.getElementById("customerName").value = "";
+}
+window.onload = function() {
+    let bookedSeats = JSON.parse(localStorage.getItem("bookedSeats")) || [];
+
+    bookedSeats.forEach(data => {
+        const allSeats = document.querySelectorAll(".seat");
+
+        allSeats.forEach(seat => {
+            if (seat.innerText === data.seat) {
+                seat.classList.add("booked");
+                seat.title = "จองโดย: " + data.name;
+            }
+        });
+    });
+};
+  </script>
+
+</body>
+</html>
