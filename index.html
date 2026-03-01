@@ -83,96 +83,8 @@
 <br><br>
 <button onclick="confirmBooking()">ยืนยันการจอง</button>
 
-  <script>
-    window.onload = function() {
-      const bookedSeats = JSON.parse(localStorage.getItem("bookedSeats")) || [];
-      const seats = document.querySelectorAll(".seat");
 
-      seats.forEach(seat => {
-        if (bookedSeats.includes(seat.innerText)) {
-          seat.classList.add("booked");
-        }
-      });
-    };
-
-    function changeColor(button) {
-      if (button.classList.contains("booked")) {
-        return;
-      }
-
-      button.classList.toggle("selected");
-    }
-
-    function confirmSeat() {
-      const selectedSeats = document.querySelectorAll(".selected");
-
-      if (selectedSeats.length === 0) {
-        alert("กรุณาเลือกที่นั่งก่อน");
-        return;
-      }
-
-      const bookedSeats = JSON.parse(localStorage.getItem("bookedSeats")) || [];
-
-      selectedSeats.forEach(seat => {
-        seat.classList.remove("selected");
-        seat.classList.add("booked");
-        bookedSeats.push(seat.innerText);
-      });
-
-      localStorage.setItem("bookedSeats", JSON.stringify(bookedSeats));
-
-      alert("จองสำเร็จ " + selectedSeats.length + " ที่นั่ง");
-    }
-    function confirmBooking() {
-    const name = document.getElementById("customerName").value.trim();
-
-    if (name === "") {
-        alert("กรุณากรอกชื่อผู้จองก่อน");
-        return;
-    }
-
-    const selectedSeats = document.querySelectorAll(".selected");
-
-    if (selectedSeats.length === 0) {
-        alert("กรุณาเลือกที่นั่งก่อน");
-        return;
-    }
-
-    let bookedSeats = JSON.parse(localStorage.getItem("bookedSeats")) || [];
-
-    selectedSeats.forEach(seat => {
-    seat.classList.remove("selected");
-    seat.classList.add("booked");
-
-    seat.title = "จองโดย: " + name;   // 👈 เพิ่มบรรทัดนี้
-
-    bookedSeats.push({
-        seat: seat.innerText,
-        name: name
-    });
-    });
-
-    localStorage.setItem("bookedSeats", JSON.stringify(bookedSeats));
-
-    alert("จองสำเร็จโดย: " + name);
-
-    document.getElementById("customerName").value = "";
-}
-window.onload = function() {
-    let bookedSeats = JSON.parse(localStorage.getItem("bookedSeats")) || [];
-
-    bookedSeats.forEach(data => {
-        const allSeats = document.querySelectorAll(".seat");
-
-        allSeats.forEach(seat => {
-            if (seat.innerText === data.seat) {
-                seat.classList.add("booked");
-                seat.title = "จองโดย: " + data.name;
-            }
-        });
-    });
-};
-<script type="module">
+<<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
@@ -188,11 +100,58 @@ window.onload = function() {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  window.db = db;
-  window.collection = collection;
-  window.addDoc = addDoc;
-  window.getDocs = getDocs;
-  </script>
+  window.changeColor = function(button) {
+    if (button.classList.contains("booked")) return;
+    button.classList.toggle("selected");
+  };
+
+  window.confirmBooking = async function() {
+    const name = document.getElementById("customerName").value.trim();
+    const selectedSeats = document.querySelectorAll(".selected");
+
+    if (name === "") {
+      alert("กรุณากรอกชื่อผู้จองก่อน");
+      return;
+    }
+
+    if (selectedSeats.length === 0) {
+      alert("กรุณาเลือกที่นั่งก่อน");
+      return;
+    }
+
+    for (const seat of selectedSeats) {
+      await addDoc(collection(db, "bookings"), {
+        name: name,
+        seat: seat.innerText,
+        timestamp: new Date()
+      });
+
+      seat.classList.remove("selected");
+      seat.classList.add("booked");
+      seat.title = "จองโดย: " + name;
+    }
+
+    alert("บันทึกลงฐานข้อมูลกลางแล้ว!");
+    document.getElementById("customerName").value = "";
+  };
+
+  async function loadBookings() {
+    const querySnapshot = await getDocs(collection(db, "bookings"));
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const seats = document.querySelectorAll(".seat");
+
+      seats.forEach(seat => {
+        if (seat.innerText === data.seat) {
+          seat.classList.add("booked");
+          seat.title = "จองโดย: " + data.name;
+        }
+      });
+    });
+  }
+
+  loadBookings();
+</script>
 
 </body>
 </html>
