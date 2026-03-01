@@ -7,38 +7,62 @@
 <body>
 
 <h1>📋 รายชื่อผู้จองที่นั่ง</h1>
+<button id="exportBtn">Export เป็น Excel</button>
 <ul id="list"></ul>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import * as XLSX from "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
+  apiKey: "YOUR_API_KEY",
   authDomain: "seat-booking-757dc.firebaseapp.com",
   projectId: "seat-booking-757dc",
   storageBucket: "seat-booking-757dc.firebasestorage.app",
   messagingSenderId: "247801765305",
-  appId: "1:247801765305:web:b301a58aee401195706a68",
-  measurementId: "G-4WLFBTCGY5"
+  appId: "1:247801765305:web:b301a58aee401195706a68"
 };
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
 
-  const list = document.getElementById("list");
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  async function loadData() {
-    const querySnapshot = await getDocs(collection(db, "bookings"));
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const li = document.createElement("li");
-      li.textContent = `ชื่อ: ${data.name} | ที่นั่ง: ${data.seat}`;
-      list.appendChild(li);
-    });
-  }
+const list = document.getElementById("list");
 
-  loadData();
+/* ---------- โหลดข้อมูล ---------- */
+async function loadData() {
+  const querySnapshot = await getDocs(collection(db, "bookings"));
+  
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    const li = document.createElement("li");
+    li.textContent = `ชื่อ: ${data.name} | ที่นั่ง: ${data.seat}`;
+    list.appendChild(li);
+  });
+}
+
+loadData();
+
+/* ---------- Export Excel ---------- */
+document.getElementById("exportBtn").addEventListener("click", async () => {
+
+  const querySnapshot = await getDocs(collection(db, "bookings"));
+  const data = [];
+
+  querySnapshot.forEach((doc) => {
+    data.push(doc.data());
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Bookings");
+
+  XLSX.writeFile(workbook, "bookings.xlsx");
+});
+
 </script>
 
 </body>
