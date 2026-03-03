@@ -3,10 +3,7 @@
 <head>
   <title>Seat Booking</title>
   <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-    }
+    body { font-family: Arial; text-align: center; }
 
     .grid {
       display: grid;
@@ -26,26 +23,18 @@
       font-weight: bold;
     }
 
-    .selected {
-      background-color: orange;
-    }
-
-    .booked {
-      background-color: red;
-      cursor: not-allowed;
-    }
+    .selected { background-color: orange; }
+    .booked   { background-color: red; cursor: not-allowed; }
   </style>
 </head>
 
 <body>
 
-<!-- ✅ PAGE 1 -->
+<!-- PAGE 1 -->
 <div id="page1">
-
   <h1>เลือกที่นั่งที่ต้องการ</h1>
 
   <div class="grid">
-
     <button class="seat" onclick="changeColor(this)">A1</button>
     <button class="seat" onclick="changeColor(this)">A2</button>
     <button class="seat" onclick="changeColor(this)">A3</button>
@@ -65,62 +54,75 @@
     <button class="seat" onclick="changeColor(this)">D2</button>
     <button class="seat" onclick="changeColor(this)">D3</button>
     <button class="seat" onclick="changeColor(this)">D4</button>
-
-    <button class="seat" onclick="changeColor(this)">E1</button>
-    <button class="seat" onclick="changeColor(this)">E2</button>
-    <button class="seat" onclick="changeColor(this)">E3</button>
-    <button class="seat" onclick="changeColor(this)">E4</button>
-
   </div>
 
   <label>ชื่อผู้จอง:</label>
-  <input type="text" id="customerName" placeholder="กรอกชื่อที่นี่">
+  <input type="text" id="customerName">
   <br><br>
   <button onclick="goToPayment()">จอง</button>
-
 </div>
 
 
-<!-- ✅ PAGE 2 -->
-<div id="page2" style="display:none; text-align:center;">
-
+<!-- PAGE 2 -->
+<div id="page2" style="display:none;">
   <h2>💳 ชำระเงิน</h2>
   <p>สแกน QR เพื่อโอนเงิน</p>
 
   <img src="qr.png" width="250"><br><br>
 
   <input type="file" id="slip" accept="image/*"><br><br>
-
   <button onclick="finishPayment()">เสร็จสิ้น</button>
-
 </div>
 
 
-<!-- ✅ PAGE 3 -->
-<div id="page3" style="display:none; text-align:center;">
-
+<!-- PAGE 3 -->
+<div id="page3" style="display:none;">
   <h1>🎉 ขอบคุณที่จองพาแลงกับเฮาเด้อจ้า ❤️</h1>
-
 </div>
 
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, onSnapshot }
+  from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "seat-booking-757dc.firebaseapp.com",
-    projectId: "seat-booking-757dc",
-    storageBucket: "seat-booking-757dc.firebasestorage.app",
-    messagingSenderId: "247801765305",
-    appId: "1:247801765305:web:b301a58aee401195706a68"
-  };
+   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
+  authDomain: "seat-booking-757dc.firebaseapp.com",
+  projectId: "seat-booking-757dc",
+  storageBucket: "seat-booking-757dc.firebasestorage.app",
+  messagingSenderId: "247801765305",
+  appId: "1:247801765305:web:b301a58aee401195706a68",
+  measurementId: "G-4WLFBTCGY5"
+}
+  }
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
   let selectedSeatsForPayment = [];
+
+  // 🔥 REAL-TIME LISTENER
+  onSnapshot(collection(db, "bookings"), (snapshot) => {
+
+    const seats = document.querySelectorAll(".seat");
+
+    // ล้างสถานะ booked ก่อน
+    seats.forEach(seat => seat.classList.remove("booked"));
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+
+      seats.forEach(seat => {
+        if (seat.innerText === data.seat) {
+          seat.classList.add("booked");
+        }
+      });
+    });
+
+  });
 
   window.changeColor = function(button) {
     if (button.classList.contains("booked")) return;
@@ -132,13 +134,8 @@
     const name = document.getElementById("customerName").value.trim();
     const selectedSeats = document.querySelectorAll(".selected");
 
-    if (name === "") {
-      alert("กรุณากรอกชื่อก่อน");
-      return;
-    }
-
-    if (selectedSeats.length === 0) {
-      alert("กรุณาเลือกที่นั่งก่อน");
+    if (name === "" || selectedSeats.length === 0) {
+      alert("กรุณากรอกชื่อและเลือกที่นั่ง");
       return;
     }
 
@@ -168,7 +165,6 @@
       const base64Slip = e.target.result;
 
       for (const seatNumber of selectedSeatsForPayment) {
-
         await addDoc(collection(db, "bookings"), {
           name: name,
           seat: seatNumber,
@@ -183,6 +179,7 @@
 
     reader.readAsDataURL(slipFile);
   };
+
 </script>
 
 </body>
