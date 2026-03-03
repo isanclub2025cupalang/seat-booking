@@ -106,21 +106,78 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    onSnapshot, 
+    query 
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "seat-booking-757dc.firebaseapp.com",
-    projectId: "seat-booking-757dc",
-    storageBucket: "seat-booking-757dc.firebasestorage.app",
-    messagingSenderId: "247801765305",
-    appId: "1:247801765305:web:b301a58aee401195706a68"
+    apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
+  authDomain: "seat-booking-757dc.firebaseapp.com",
+  projectId: "seat-booking-757dc",
+  storageBucket: "seat-booking-757dc.firebasestorage.app",
+  messagingSenderId: "247801765305",
+  appId: "1:247801765305:web:b301a58aee401195706a68",
+  measurementId: "G-4WLFBTCGY5"
   };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
   let selectedSeatsForPayment = [];
+  let alreadyBookedSeats = [];
+
+  // 1. ดึงข้อมูลที่นั่งที่จองแล้วแบบ Real-time
+  const q = query(collection(db, "bookings"));
+  onSnapshot(q, (snapshot) => {
+    alreadyBookedSeats = snapshot.docs.map(doc => doc.data().seat);
+    updateSeatUI();
+  });
+
+  function updateSeatUI() {
+    document.querySelectorAll(".seat").forEach(btn => {
+      if (alreadyBookedSeats.includes(btn.innerText)) {
+        btn.classList.add("booked");
+        btn.classList.remove("selected");
+        btn.disabled = true;
+      }
+    });
+  }
+
+  // 2. ฟังก์ชันบีบอัดรูปภาพ (Image Compression)
+  async function compressImage(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800; // ปรับความกว้างสูงสุดเป็น 800px
+          let width = img.width;
+          let height = img.height;
+
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // บีบอัดคุณภาพเหลือ 70% (0.7)
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(dataUrl);
+        };
+      };
+    });
+  }
 
   window.changeColor = function(button) {
     if (button.classList.contains("booked")) return;
@@ -128,60 +185,54 @@
   };
 
   window.goToPayment = function() {
-
     const name = document.getElementById("customerName").value.trim();
     const selectedSeats = document.querySelectorAll(".selected");
 
-    if (name === "") {
-      alert("กรุณากรอกชื่อก่อน");
+    if (!name || selectedSeats.length === 0) {
+      alert("กรุณากรอกชื่อและเลือกที่นั่งให้เรียบร้อยจ้า");
       return;
     }
 
-    if (selectedSeats.length === 0) {
-      alert("กรุณาเลือกที่นั่งก่อน");
-      return;
-    }
-
-    selectedSeatsForPayment = [];
-    selectedSeats.forEach(seat => {
-      selectedSeatsForPayment.push(seat.innerText);
-    });
-
+    selectedSeatsForPayment = Array.from(selectedSeats).map(s => s.innerText);
     document.getElementById("page1").style.display = "none";
     document.getElementById("page2").style.display = "block";
   };
 
   window.finishPayment = async function() {
-
     const name = document.getElementById("customerName").value.trim();
     const slipFile = document.getElementById("slip").files[0];
 
     if (!slipFile) {
-      alert("กรุณาแนบสลิปก่อน");
+      alert("รบกวนแนบสลิปเพื่อยืนยันการโอนเงินด้วยน้า");
       return;
     }
 
-    const reader = new FileReader();
+    // แสดงสถานะกำลังโหลด (Optionally)
+    const btn = document.querySelector("#page2 button");
+    btn.disabled = true;
+    btn.innerText = "กำลังบันทึกข้อมูล...";
 
-    reader.onload = async function(e) {
-
-      const base64Slip = e.target.result;
+    try {
+      // บีบอัดรูปก่อนส่ง
+      const compressedBase64 = await compressImage(slipFile);
 
       for (const seatNumber of selectedSeatsForPayment) {
-
         await addDoc(collection(db, "bookings"), {
           name: name,
           seat: seatNumber,
-          slipBase64: base64Slip,
+          slipBase64: compressedBase64,
           timestamp: new Date()
         });
       }
 
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "block";
-    };
-
-    reader.readAsDataURL(slipFile);
+    } catch (error) {
+      console.error(error);
+      alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้งนะ");
+      btn.disabled = false;
+      btn.innerText = "เสร็จสิ้น";
+    }
   };
 </script>
 
