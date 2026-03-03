@@ -7,7 +7,7 @@
       font-family: Arial;
       text-align: center;
     }
-
+<div id="page1">
     h1 {
       margin-bottom: 30px;
     }
@@ -75,24 +75,27 @@
     <button class="seat" onclick="changeColor(this)">E2</button>
     <button class="seat" onclick="changeColor(this)">E3</button>
     <button class="seat" onclick="changeColor(this)">E4</button>
-
-  </div>
 <br><br>
 <label>ชื่อผู้จอง:</label>
 <input type="text" id="customerName" placeholder="กรอกชื่อที่นี่">
 <br><br>
-<button onclick="startBooking()">จอง</button>
-<div id="paymentSection" style="display:none; margin-top:20px;">
+<button onclick="goToPayment()">จอง</button>
+
+<div id="page2" style="display:none; text-align:center;">
 
   <h2>💳 ชำระเงิน</h2>
   <p>สแกน QR เพื่อโอนเงิน</p>
 
-  <!-- ใส่รูป QR ของเธอตรง src -->
   <img src="qr.png" width="250"><br><br>
 
   <input type="file" id="slip" accept="image/*"><br><br>
 
   <button onclick="finishPayment()">เสร็จสิ้น</button>
+
+</div>
+<div id="page3" style="display:none; text-align:center;">
+
+  <h1>🎉 ขอบคุณที่จองพาแลงกับเฮาเด้อจ้า ❤️</h1>
 
 </div>
 
@@ -228,16 +231,41 @@ window.finishPayment = async function() {
 
     alert("จองสำเร็จ 🎉");
 
-    document.getElementById("customerName").value = "";
-    document.getElementById("slip").value = "";
-    document.getElementById("paymentSection").style.display = "none";
-    selectedSeatsForPayment = [];
+    // ซ่อนหน้า QR
+document.getElementById("page2").style.display = "none";
 
+// แสดงหน้าขอบคุณ
+document.getElementById("page3").style.display = "block";
   };
 
   reader.readAsDataURL(slipFile); // แปลงไฟล์เป็น base64
 };
+window.goToPayment = function() {
 
+  const name = document.getElementById("customerName").value.trim();
+  const selectedSeats = document.querySelectorAll(".selected");
+
+  if (name === "") {
+    alert("กรุณากรอกชื่อก่อน");
+    return;
+  }
+
+  if (selectedSeats.length === 0) {
+    alert("กรุณาเลือกที่นั่งก่อน");
+    return;
+  }
+
+  selectedSeatsForPayment = [];
+  selectedSeats.forEach(seat => {
+    selectedSeatsForPayment.push(seat.innerText);
+  });
+
+  // ซ่อนหน้าแรก
+  document.getElementById("page1").style.display = "none";
+
+  // แสดงหน้า QR
+  document.getElementById("page2").style.display = "block";
+};
 </script>
 
 </body>
