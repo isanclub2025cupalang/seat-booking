@@ -9,47 +9,80 @@
     body {
       font-family: 'Kanit', sans-serif;
       margin: 0;
-      background-color: #fdfaf0; /* โทนสีครีมตามโปสเตอร์ */
+      background-color: #fdfaf0;
       color: #333;
+      line-height: 1.5;
     }
+
+    /* 1. ส่วนรูป Banner: ปรับให้ลด Margin ด้านล่าง */
+    .banner-top {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto; /* เอา margin-bottom ออก หรือให้น้อยที่สุด */
+      overflow: hidden;
+      border-radius: 0 0 25px 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .banner-top img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* 2. ส่วนหัวข้อ: ลด Padding ให้กระชับขึ้น ไม่ให้ห่างจากรูป */
     .hero {
-      background: linear-gradient(rgba(253, 250, 240, 0.3), rgba(253, 250, 240, 0.9)), 
-                  url('https://raw.githubusercontent.com/your-repo/path/to/image.png'); /* คุณสามารถอัปโหลดรูปโปสเตอร์ขึ้นโฮสต์แล้วเปลี่ยน URL ตรงนี้ได้ */
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center top;
-      height: 70vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
+      padding: 20px 20px 10px 20px; /* ลด padding บน-ล่าง */
       text-align: center;
-      padding-bottom: 30px;
     }
+
+    h1 { 
+      color: #b52c58; 
+      font-size: 2.4rem; 
+      margin: 10px 0 5px 0; /* บีบ margin ให้ชิด */
+      font-weight: 600;
+    }
+
+    .sub-title { 
+      font-size: 1.3rem; 
+      color: #d68c2d; 
+      font-weight: 600; 
+      margin: 0 0 15px 0; 
+    }
+
+    /* 3. ส่วนเนื้อหา: ปรับ Margin-top ไม่ให้ห่างจากส่วนหัวข้อ */
     .content {
       max-width: 800px;
-      margin: 0 auto 50px;
+      margin: 0 auto 50px; /* เอา margin-top ที่เคยติดลบออก เพื่อให้มันต่อกันพอดี */
       background: white;
-      padding: 40px;
+      padding: 30px;
       border-radius: 30px;
-      box-shadow: 0 10px 40px rgba(181, 44, 88, 0.1); /* เงาสีชมพูอ่อนๆ */
+      box-shadow: 0 8px 30px rgba(181, 44, 88, 0.08);
       text-align: center;
-      border-top: 5px solid #b52c58; /* สีชมพูเข้มตามชื่อพาแลง */
+      border-top: 5px solid #b52c58;
     }
-    h1 { color: #b52c58; font-size: 2.5rem; margin-bottom: 10px; }
-    .sub-title { font-size: 1.3rem; color: #d68c2d; font-weight: 600; margin-bottom: 20px; }
-    
+
     .info-list {
       text-align: left;
       display: inline-block;
-      margin: 20px 0;
+      margin: 15px 0;
+      width: 90%;
     }
-    .info-item { margin-bottom: 15px; font-size: 1.1rem; }
-    .info-item span { color: #b52c58; font-weight: bold; margin-right: 10px; }
+
+    .info-item { 
+      margin-bottom: 12px; 
+      font-size: 1.1rem; 
+    }
+
+    .info-item span { 
+      color: #b52c58; 
+      font-weight: bold; 
+      margin-right: 8px; 
+    }
 
     .booking-btn {
       display: inline-block;
-      padding: 18px 50px;
+      padding: 16px 50px;
       background: linear-gradient(135deg, #b52c58 0%, #d68c2d 100%);
       color: white;
       text-decoration: none;
@@ -57,31 +90,21 @@
       font-weight: bold;
       border-radius: 50px;
       transition: 0.3s;
-      margin-top: 30px;
-      box-shadow: 0 8px 20px rgba(181, 44, 88, 0.3);
+      margin-top: 15px;
+      box-shadow: 0 8px 20px rgba(181, 44, 88, 0.2);
     }
-    .booking-btn:hover { transform: scale(1.05); box-shadow: 0 12px 25px rgba(181, 44, 88, 0.5); }
-    
-    .club-name { font-size: 0.9rem; color: #666; margin-top: 50px; }
-   /* ดีไซน์ส่วนรูปภาพด้านบนสุด */
-  .banner-top {
-    width: 100%;
-    max-width: 800px; /* กำหนดขนาดไม่ให้ใหญ่เกินไปในจอคอม */
-    margin: 0 auto 20px auto;
-    overflow: hidden;
-    border-radius: 0 0 20px 20px; /* โค้งมนเฉพาะมุมล่าง */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  }
 
-  .banner-top img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
+    .booking-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(181, 44, 88, 0.3); }
+
+    .club-name { 
+      font-size: 0.9rem; 
+      color: #777; 
+      margin-top: 40px; 
+    }
   </style>
 </head>
 <body>
-    <body>
+
   <div class="banner-top">
     <img src="cover.png" alt="อีสานจุฬาฯ พาแลง">
   </div>
@@ -90,28 +113,20 @@
     <h1>อีสานจุฬาฯ พาแลง</h1>
     <div class="sub-title">กินข้าวแลงแญงศิลป์...ถิ่นนครพนม</div>
   </div>
-  
-  </body>
-  <div class="hero">
-    <h1>อีสานจุฬาฯ พาแลง</h1>
-    <div class="sub-title">กินข้าวแลงแญงศิลป์...ถิ่นนครพนม</div>
-  </div>
 
   <div class="content">
-    <p style="font-size: 1.2rem; line-height: 1.6;">
-      วิจิตตระการตา... มนต์เสน่ห์ลุ่มน้ำโขง<br>
+    <p style="font-size: 1.2rem; margin-bottom: 20px; color: #555;">
+      วิจิตตระการตา... มนต์เสน่ห์ลุ่มน้ำโขง
     </p>
 
     <div class="info-list">
-      <div class="info-item"><span>📅 วันที่จัดงาน:</span> 28 มีนาคม 2569 </div>
-      <div class="info-item"><span>📍 สถานที่:</span> สนามหน้าคณะวิทยาศาสตร์การกีฬา 
-                                                       จุฬาลงกรณ์มหาวิทยาลัย</div>
-      <div class="info-item"><span>💰 ราคาพาข้าว:</span> 699 บาท / พา นั่งได้ 5 คน</div>
-      <div class="info-item"><span>🎭 กิจกรรม:</span> ชมการแสดงศิลปวัฒนธรรมและกินข้าวแลงฮ่วมกัน</div>
+      <div class="info-item"><span>📅 วันที่:</span> 28 มีนาคม 2569</div>
+      <div class="info-item"><span>📍 สถานที่:</span> สนามหน้าคณะวิทยาศาสตร์การกีฬา จุฬาฯ</div>
+      <div class="info-item"><span>💰 ราคาพาข้าว:</span> 699 บาท / พา (นั่งได้ 5 คน)</div>
+      <div class="info-item"><span>🎭 กิจกรรม:</span> ชมการแสดงและกินข้าวแลงฮ่วมกัน</div>
     </div>
 
     <br>
-    
     <a href="booking.html" class="booking-btn">จองพาแลง</a>
 
     <div class="club-name">
