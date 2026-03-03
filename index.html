@@ -63,10 +63,35 @@
     .booking-btn:hover { transform: scale(1.05); box-shadow: 0 12px 25px rgba(181, 44, 88, 0.5); }
     
     .club-name { font-size: 0.9rem; color: #666; margin-top: 50px; }
+   /* ดีไซน์ส่วนรูปภาพด้านบนสุด */
+  .banner-top {
+    width: 100%;
+    max-width: 800px; /* กำหนดขนาดไม่ให้ใหญ่เกินไปในจอคอม */
+    margin: 0 auto 20px auto;
+    overflow: hidden;
+    border-radius: 0 0 20px 20px; /* โค้งมนเฉพาะมุมล่าง */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .banner-top img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
   </style>
 </head>
 <body>
+    <body>
+  <div class="banner-top">
+    <img src="cover.png" alt="อีสานจุฬาฯ พาแลง">
+  </div>
 
+  <div class="hero">
+    <h1>อีสานจุฬาฯ พาแลง</h1>
+    <div class="sub-title">กินข้าวแลงแญงศิลป์...ถิ่นนครพนม</div>
+  </div>
+  
+  </body>
   <div class="hero">
     <h1>อีสานจุฬาฯ พาแลง</h1>
     <div class="sub-title">กินข้าวแลงแญงศิลป์...ถิ่นนครพนม</div>
@@ -75,14 +100,14 @@
   <div class="content">
     <p style="font-size: 1.2rem; line-height: 1.6;">
       วิจิตตระการตา... มนต์เสน่ห์ลุ่มน้ำโขง<br>
-      ชมรมศิลปวัฒนธรรมอีสาน จุฬาลงกรณ์มหาวิทยาลัย ภูมิใจนำเสนอ
     </p>
 
     <div class="info-list">
       <div class="info-item"><span>📅 วันที่จัดงาน:</span> 28 มีนาคม 2569 </div>
-      <div class="info-item"><span>📍 สถานที่:</span> สนามหน้าคณะวิทยาศาสตร์การกีฬาจุฬาลงกรณ์มหาวิทยาลัย</div>
+      <div class="info-item"><span>📍 สถานที่:</span> สนามหน้าคณะวิทยาศาสตร์การกีฬา 
+                                                       จุฬาลงกรณ์มหาวิทยาลัย</div>
       <div class="info-item"><span>💰 ราคาพาข้าว:</span> 699 บาท / พา นั่งได้ 5 คน</div>
-      <div class="info-item"><span>🎭 กิจกรรม:</span> การแสดงศิลปวัฒนธรรมและรับประทานข้าวแลงนำกัน</div>
+      <div class="info-item"><span>🎭 กิจกรรม:</span> ชมการแสดงศิลปวัฒนธรรมและกินข้าวแลงฮ่วมกัน</div>
     </div>
 
     <br>
