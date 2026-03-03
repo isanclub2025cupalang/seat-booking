@@ -7,10 +7,6 @@
       font-family: Arial;
       text-align: center;
     }
-<div id="page1">
-    h1 {
-      margin-bottom: 30px;
-    }
 
     .grid {
       display: grid;
@@ -40,47 +36,52 @@
     }
   </style>
 </head>
+
 <body>
+
+<!-- ✅ PAGE 1 -->
+<div id="page1">
 
   <h1>เลือกที่นั่งที่ต้องการ</h1>
 
   <div class="grid">
 
-    <!-- แถว A -->
     <button class="seat" onclick="changeColor(this)">A1</button>
     <button class="seat" onclick="changeColor(this)">A2</button>
     <button class="seat" onclick="changeColor(this)">A3</button>
     <button class="seat" onclick="changeColor(this)">A4</button>
 
-    <!-- แถว B -->
     <button class="seat" onclick="changeColor(this)">B1</button>
     <button class="seat" onclick="changeColor(this)">B2</button>
     <button class="seat" onclick="changeColor(this)">B3</button>
     <button class="seat" onclick="changeColor(this)">B4</button>
 
-    <!-- แถว C -->
     <button class="seat" onclick="changeColor(this)">C1</button>
     <button class="seat" onclick="changeColor(this)">C2</button>
     <button class="seat" onclick="changeColor(this)">C3</button>
     <button class="seat" onclick="changeColor(this)">C4</button>
 
-    <!-- แถว D -->
     <button class="seat" onclick="changeColor(this)">D1</button>
     <button class="seat" onclick="changeColor(this)">D2</button>
     <button class="seat" onclick="changeColor(this)">D3</button>
     <button class="seat" onclick="changeColor(this)">D4</button>
 
-    <!-- แถว E -->
     <button class="seat" onclick="changeColor(this)">E1</button>
     <button class="seat" onclick="changeColor(this)">E2</button>
     <button class="seat" onclick="changeColor(this)">E3</button>
     <button class="seat" onclick="changeColor(this)">E4</button>
-<br><br>
-<label>ชื่อผู้จอง:</label>
-<input type="text" id="customerName" placeholder="กรอกชื่อที่นี่">
-<br><br>
-<button onclick="goToPayment()">จอง</button>
 
+  </div>
+
+  <label>ชื่อผู้จอง:</label>
+  <input type="text" id="customerName" placeholder="กรอกชื่อที่นี่">
+  <br><br>
+  <button onclick="goToPayment()">จอง</button>
+
+</div>
+
+
+<!-- ✅ PAGE 2 -->
 <div id="page2" style="display:none; text-align:center;">
 
   <h2>💳 ชำระเงิน</h2>
@@ -93,18 +94,22 @@
   <button onclick="finishPayment()">เสร็จสิ้น</button>
 
 </div>
+
+
+<!-- ✅ PAGE 3 -->
 <div id="page3" style="display:none; text-align:center;">
 
   <h1>🎉 ขอบคุณที่จองพาแลงกับเฮาเด้อจ้า ❤️</h1>
 
 </div>
 
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
+    apiKey: "YOUR_API_KEY",
     authDomain: "seat-booking-757dc.firebaseapp.com",
     projectId: "seat-booking-757dc",
     storageBucket: "seat-booking-757dc.firebasestorage.app",
@@ -114,19 +119,21 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
- let selectedSeatsForPayment = [];
+
+  let selectedSeatsForPayment = [];
 
   window.changeColor = function(button) {
     if (button.classList.contains("booked")) return;
     button.classList.toggle("selected");
   };
 
-  window.confirmBooking = async function() {
+  window.goToPayment = function() {
+
     const name = document.getElementById("customerName").value.trim();
     const selectedSeats = document.querySelectorAll(".selected");
 
     if (name === "") {
-      alert("กรุณากรอกชื่อผู้จองก่อน");
+      alert("กรุณากรอกชื่อก่อน");
       return;
     }
 
@@ -135,137 +142,47 @@
       return;
     }
 
-    for (const seat of selectedSeats) {
-      await addDoc(collection(db, "bookings"), {
-        name: name,
-        seat: seat.innerText,
-        timestamp: new Date()
-      });
-
-      seat.classList.remove("selected");
-      seat.classList.add("booked");
-      seat.title = "จองโดย: " + name;
-    }
-
-    alert("บันทึกลงฐานข้อมูลกลางแล้ว!");
-    document.getElementById("customerName").value = "";
-  };
-
-  async function loadBookings() {
-    const querySnapshot = await getDocs(collection(db, "bookings"));
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const seats = document.querySelectorAll(".seat");
-
-      seats.forEach(seat => {
-        if (seat.innerText === data.seat) {
-          seat.classList.add("booked");
-          seat.title = "จองโดย: " + data.name;
-        }
-      });
+    selectedSeatsForPayment = [];
+    selectedSeats.forEach(seat => {
+      selectedSeatsForPayment.push(seat.innerText);
     });
-  }
 
-  loadBookings();
-  window.startBooking = function() {
-
-  const selectedSeats = document.querySelectorAll(".selected");
-
-  if (selectedSeats.length === 0) {
-    alert("กรุณาเลือกที่นั่งก่อน");
-    return;
-  }
-
-  selectedSeatsForPayment = [];
-
-  selectedSeats.forEach(seat => {
-    selectedSeatsForPayment.push(seat.innerText);
-  });
-
-  document.getElementById("paymentSection").style.display = "block";
-};
-window.finishPayment = async function() {
-
-  const name = document.getElementById("customerName").value.trim();
-  const slipFile = document.getElementById("slip").files[0];
-
-  if (name === "") {
-    alert("กรุณากรอกชื่อผู้จอง");
-    return;
-  }
-
-  if (selectedSeatsForPayment.length === 0) {
-    alert("ไม่มีที่นั่งที่เลือกไว้");
-    return;
-  }
-
-  if (!slipFile) {
-    alert("กรุณาแนบสลิปก่อน");
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = async function(e) {
-
-    const base64Slip = e.target.result; // แปลงเป็นข้อความ
-
-    for (const seatNumber of selectedSeatsForPayment) {
-
-      await addDoc(collection(db, "bookings"), {
-        name: name,
-        seat: seatNumber,
-        slipBase64: base64Slip,
-        timestamp: new Date()
-      });
-
-      const seats = document.querySelectorAll(".seat");
-      seats.forEach(seat => {
-        if (seat.innerText === seatNumber) {
-          seat.classList.remove("selected");
-          seat.classList.add("booked");
-          seat.title = "จองโดย: " + name;
-        }
-      });
-    }
-
-    alert("จองสำเร็จ 🎉");
-
-    // ซ่อนหน้า QR
-document.getElementById("page2").style.display = "none";
-
-// แสดงหน้าขอบคุณ
-document.getElementById("page3").style.display = "block";
+    document.getElementById("page1").style.display = "none";
+    document.getElementById("page2").style.display = "block";
   };
 
-  reader.readAsDataURL(slipFile); // แปลงไฟล์เป็น base64
-};
-window.goToPayment = function() {
+  window.finishPayment = async function() {
 
-  const name = document.getElementById("customerName").value.trim();
-  const selectedSeats = document.querySelectorAll(".selected");
+    const name = document.getElementById("customerName").value.trim();
+    const slipFile = document.getElementById("slip").files[0];
 
-  if (name === "") {
-    alert("กรุณากรอกชื่อก่อน");
-    return;
-  }
+    if (!slipFile) {
+      alert("กรุณาแนบสลิปก่อน");
+      return;
+    }
 
-  if (selectedSeats.length === 0) {
-    alert("กรุณาเลือกที่นั่งก่อน");
-    return;
-  }
+    const reader = new FileReader();
 
-  selectedSeatsForPayment = [];
-  selectedSeats.forEach(seat => {
-    selectedSeatsForPayment.push(seat.innerText);
-  });
+    reader.onload = async function(e) {
 
-  // ซ่อนหน้าแรก
-  document.getElementById("page1").style.display = "none";
+      const base64Slip = e.target.result;
 
-  // แสดงหน้า QR
-  document.getElementById("page2").style.display = "block";
-};
+      for (const seatNumber of selectedSeatsForPayment) {
+
+        await addDoc(collection(db, "bookings"), {
+          name: name,
+          seat: seatNumber,
+          slipBase64: base64Slip,
+          timestamp: new Date()
+        });
+      }
+
+      document.getElementById("page2").style.display = "none";
+      document.getElementById("page3").style.display = "block";
+    };
+
+    reader.readAsDataURL(slipFile);
+  };
 </script>
 
 </body>
