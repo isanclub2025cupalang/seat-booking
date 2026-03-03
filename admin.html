@@ -21,17 +21,14 @@
       padding: 20px;
     }
 
-    .dashboard {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
+    .dashboard { max-width: 1100px; margin: 0 auto; }
 
     /* Header & Summary Cards */
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
     
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 20px;
       margin-bottom: 30px;
     }
@@ -56,7 +53,7 @@
       overflow-x: auto;
     }
 
-    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    table { width: 100%; border-collapse: collapse; min-width: 800px; }
     th { text-align: left; padding: 15px; border-bottom: 2px solid #f0f2f5; color: #636e72; font-weight: 400; }
     td { padding: 15px; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
 
@@ -76,27 +73,27 @@
       cursor: pointer;
       font-family: 'Kanit', sans-serif;
       transition: 0.3s;
-      font-size: 0.9rem;
     }
     .btn-view { background: rgba(108, 92, 231, 0.1); color: var(--primary); }
     .btn-view:hover { background: var(--primary); color: white; }
     .btn-delete { background: rgba(255, 118, 117, 0.1); color: var(--danger); margin-left: 5px; }
     .btn-delete:hover { background: var(--danger); color: white; }
 
-    /* Modal */
+    /* Modal สำหรับดูสลิป */
     #modal {
       display:none; position:fixed; top:0; left:0; width:100%; height:100%;
       background:rgba(0,0,0,0.9); z-index: 1000; text-align:center; padding-top:40px;
     }
-    #modal img { max-width: 90%; max-height: 80%; border-radius: 10px; }
-    .close-modal { color: white; margin-top: 20px; cursor: pointer; display: block; }
+    #modal img { max-width: 90%; max-height: 80%; border-radius: 10px; border: 5px solid white; }
+    .close-modal { color: white; margin-top: 20px; cursor: pointer; display: block; font-size: 1.2rem; }
 
     .search-box {
-      padding: 10px 15px;
+      padding: 12px 20px;
       border-radius: 10px;
       border: 1px solid #ddd;
-      width: 250px;
+      width: 300px;
       font-family: 'Kanit';
+      font-size: 1rem;
     }
   </style>
 </head>
@@ -104,8 +101,8 @@
 
   <div class="dashboard">
     <div class="header">
-      <h1>📊 ระบบหลังบ้าน</h1>
-      <input type="text" id="searchInput" class="search-box" placeholder="ค้นหาชื่อผู้จอง..." onkeyup="filterTable()">
+      <h1>📊 ระบบจัดการการจอง (แอดมิน)</h1>
+      <input type="text" id="searchInput" class="search-box" placeholder="🔍 ค้นหาชื่อหรือเบอร์โทร..." onkeyup="filterTable()">
     </div>
 
     <div class="summary-grid">
@@ -114,8 +111,8 @@
         <p id="totalSeats">0</p>
       </div>
       <div class="card">
-        <h3>ยอดรวมทั้งหมด (บาท)</h3>
-        <p id="totalRevenue" style="color: var(--success);">0</p>
+        <h3>ยอดรายได้รวม</h3>
+        <p id="totalRevenue" style="color: var(--success);">0 ฿</p>
       </div>
     </div>
 
@@ -125,10 +122,10 @@
           <tr>
             <th>ที่นั่ง</th>
             <th>ชื่อผู้จอง</th>
-            <th>เบอร์โทรผู้จอง</th>
-            <th>ยอดชำระ</th>
+            <th>เบอร์โทรศัพท์</th>
+            <th>ยอดที่โอน (699.-)</th>
             <th>เวลาที่จอง</th>
-            <th>การจัดการ</th>
+            <th>หลักฐาน/จัดการ</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -139,26 +136,27 @@
 
   <div id="modal" onclick="this.style.display='none'">
     <img id="modalImg" src="">
-    <span class="close-modal">คลิกตรงไหนก็ได้เพื่อปิด</span>
+    <span class="close-modal">✖ คลิกตรงไหนก็ได้เพื่อปิด</span>
   </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
   import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
+  // ใช้ Config เดียวกับหน้าจองของคุณ
   const firebaseConfig = {
     apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
-  authDomain: "seat-booking-757dc.firebaseapp.com",
-  projectId: "seat-booking-757dc",
-  storageBucket: "seat-booking-757dc.firebasestorage.app",
-  messagingSenderId: "247801765305",
-  appId: "1:247801765305:web:b301a58aee401195706a68",
-  measurementId: "G-4WLFBTCGY5"
-};
+    authDomain: "seat-booking-757dc.firebaseapp.com",
+    projectId: "seat-booking-757dc",
+    storageBucket: "seat-booking-757dc.firebasestorage.app",
+    messagingSenderId: "247801765305",
+    appId: "1:247801765305:web:b301a58aee401195706a68"
+  };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  // ดึงข้อมูลการจอง เรียงตามเวลาล่าสุด
   const q = query(collection(db, "bookings"), orderBy("timestamp", "desc"));
 
   onSnapshot(q, (snapshot) => {
@@ -167,16 +165,11 @@
     
     let totalSeatsCount = 0;
     let totalMoney = 0;
-    let uniqueBookings = new Set(); // ไว้สำหรับนับยอดเงินไม่ให้ซ้ำกรณี 1 บิลหลายที่นั่ง
 
     snapshot.forEach((snapshotDoc) => {
       const data = snapshotDoc.data();
       totalSeatsCount++;
-      
-      // คำนวณยอดเงิน (กรณีบันทึกแบบแยกที่นั่ง แต่ยอดรวมเดียวกัน)
-      // เราจะบวกยอดเงินเฉพาะบิลที่ไม่ซ้ำกัน หรือถ้าคุณบันทึกแยกยอด ให้ใช้ logic อื่น
-      // ในที่นี้สมมติบวกตามจำนวนที่นั่ง x 699 เพื่อความง่าย
-      totalMoney += 699;
+      totalMoney += 699; // ยอดเงินคำนวณจากที่นั่งละ 699
 
       const date = data.timestamp ? data.timestamp.toDate().toLocaleString('th-TH') : "-";
       
@@ -184,7 +177,8 @@
       row.innerHTML = `
         <td><span class="seat-badge">${data.seat}</span></td>
         <td><strong>${data.name}</strong></td>
-        <td>${(699).toLocaleString()} ฿</td>
+        <td><a href="tel:${data.phone}" style="text-decoration:none; color:var(--primary); font-weight:bold;">${data.phone || '-'}</a></td>
+        <td>699 ฿</td>
         <td style="font-size: 0.85rem; color: #636e72;">${date}</td>
         <td>
           <button class="btn btn-view" onclick="viewSlip('${data.slipBase64}')">ดูสลิป</button>
@@ -194,32 +188,45 @@
       tableBody.appendChild(row);
     });
 
-    document.getElementById("totalSeats").innerText = totalSeatsCount;
-    document.getElementById("totalRevenue").innerText = totalMoney.toLocaleString();
+    document.getElementById("totalSeats").innerText = totalSeatsCount + " ที่นั่ง";
+    document.getElementById("totalRevenue").innerText = totalMoney.toLocaleString() + " ฿";
   });
 
+  // ฟังก์ชันดูรูปสลิป
   window.viewSlip = function(base64) {
+    if(!base64) return alert("ไม่พบไฟล์สลิป");
     document.getElementById("modalImg").src = base64;
     document.getElementById("modal").style.display = "block";
   }
 
+  // ฟังก์ชันลบการจอง
   window.deleteBooking = async function(id, seat) {
-    if(confirm(`ลบการจองที่นั่ง ${seat} หรือไม่? ที่นั่งจะกลับมาว่างทันที`)) {
-      await deleteDoc(doc(db, "bookings", id));
+    if(confirm(`ยืนยันการลบที่นั่ง ${seat} ? (ที่นั่งจะกลับมาว่างให้คนอื่นจองทันที)`)) {
+      try {
+        await deleteDoc(doc(db, "bookings", id));
+      } catch (error) {
+        alert("ลบไม่สำเร็จ กรุณาลองใหม่");
+      }
     }
   }
 
-  // ฟังก์ชันค้นหาในตาราง
+  // ฟังก์ชันค้นหาในตาราง (ชื่อ หรือ เบอร์โทร)
   window.filterTable = function() {
     const input = document.getElementById("searchInput");
     const filter = input.value.toUpperCase();
     const tr = document.getElementById("tableBody").getElementsByTagName("tr");
 
     for (let i = 0; i < tr.length; i++) {
-      let td = tr[i].getElementsByTagName("td")[1]; // ช่องชื่อผู้จอง
-      if (td) {
-        let txtValue = td.textContent || td.innerText;
-        tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+      let tdName = tr[i].getElementsByTagName("td")[1];
+      let tdPhone = tr[i].getElementsByTagName("td")[2];
+      if (tdName || tdPhone) {
+        let nameValue = tdName.textContent || tdName.innerText;
+        let phoneValue = tdPhone.textContent || tdPhone.innerText;
+        if (nameValue.toUpperCase().indexOf(filter) > -1 || phoneValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
       }
     }
   }
