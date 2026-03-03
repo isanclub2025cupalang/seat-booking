@@ -2,126 +2,166 @@
 <html>
 <head>
   <title>Seat Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-color: #f0f2f5;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --available: #2ecc71;
+      --selected: #6c5ce7;
+      --booked: #dfe6e9;
+      --text-main: #2d3436;
+    }
+
     body {
-      font-family: Arial;
+      font-family: 'Kanit', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
       text-align: center;
     }
 
+    h1, h2 { margin-top: 0; color: var(--text-main); }
+
+    .legend { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 0.8rem; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .dot { width: 12px; height: 12px; border-radius: 3px; }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(4, 70px);
-      gap: 15px;
-      justify-content: center;
-      margin-bottom: 30px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 25px;
     }
 
     .seat {
-      width: 70px;
-      height: 70px;
-      border-radius: 8px;
-      border: none;
-      background-color: lightgreen;
-      cursor: pointer;
+      aspect-ratio: 1/1;
+      border-radius: 10px;
+      border: 2px solid var(--available);
+      background: white;
+      color: var(--available);
       font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
-    .selected {
-      background-color: orange;
+    .seat.selected { background: var(--selected); border-color: var(--selected); color: white; }
+    .seat.booked { background: var(--booked); border-color: var(--booked); color: #b2bec3; cursor: not-allowed; }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
     }
 
-    .booked {
-      background-color: red;
-      cursor: not-allowed;
+    .main-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, #6c5ce7, #a29bfe);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
     }
+
+    /* Payment Styles */
+    .payment-summary { background: rgba(108, 92, 231, 0.1); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; }
+    .summary-item { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .total-price { border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; color: var(--selected); font-size: 1.2rem; }
+    .qr-section img { width: 200px; border-radius: 10px; margin: 15px 0; }
+    .custom-file-upload { display: block; padding: 10px; background: #eee; border-radius: 10px; cursor: pointer; margin-bottom: 15px; }
   </style>
 </head>
-
 <body>
 
-<!-- ✅ PAGE 1 -->
-<div id="page1">
+<div class="container">
+  <div id="page1">
+    <h1>🎬 จองที่นั่ง</h1>
+    <div class="legend">
+      <div class="legend-item"><div class="dot" style="border:1px solid var(--available)"></div> ว่าง</div>
+      <div class="legend-item"><div class="dot" style="background:var(--selected)"></div> เลือก</div>
+      <div class="legend-item"><div class="dot" style="background:var(--booked)"></div> จองแล้ว</div>
+    </div>
 
-  <h1>เลือกที่นั่งที่ต้องการ</h1>
-
-  <div class="grid">
-
-    <button class="seat" onclick="changeColor(this)">A1</button>
-    <button class="seat" onclick="changeColor(this)">A2</button>
-    <button class="seat" onclick="changeColor(this)">A3</button>
-    <button class="seat" onclick="changeColor(this)">A4</button>
-
-    <button class="seat" onclick="changeColor(this)">B1</button>
-    <button class="seat" onclick="changeColor(this)">B2</button>
-    <button class="seat" onclick="changeColor(this)">B3</button>
-    <button class="seat" onclick="changeColor(this)">B4</button>
-
-    <button class="seat" onclick="changeColor(this)">C1</button>
-    <button class="seat" onclick="changeColor(this)">C2</button>
-    <button class="seat" onclick="changeColor(this)">C3</button>
-    <button class="seat" onclick="changeColor(this)">C4</button>
-
-    <button class="seat" onclick="changeColor(this)">D1</button>
-    <button class="seat" onclick="changeColor(this)">D2</button>
-    <button class="seat" onclick="changeColor(this)">D3</button>
-    <button class="seat" onclick="changeColor(this)">D4</button>
-
-    <button class="seat" onclick="changeColor(this)">E1</button>
-    <button class="seat" onclick="changeColor(this)">E2</button>
-    <button class="seat" onclick="changeColor(this)">E3</button>
-    <button class="seat" onclick="changeColor(this)">E4</button>
-
+    <div class="grid">
+  <button class="seat" onclick="changeColor(this)">A1</button>
+  <button class="seat" onclick="changeColor(this)">A2</button>
+  <button class="seat" onclick="changeColor(this)">A3</button>
+  <button class="seat" onclick="changeColor(this)">A4</button>
+  <button class="seat" onclick="changeColor(this)">B1</button>
+  <button class="seat" onclick="changeColor(this)">B2</button>
+  <button class="seat" onclick="changeColor(this)">B3</button>
+  <button class="seat" onclick="changeColor(this)">B4</button>
+  <button class="seat" onclick="changeColor(this)">C1</button>
+  <button class="seat" onclick="changeColor(this)">C2</button>
+  <button class="seat" onclick="changeColor(this)">C3</button>
+  <button class="seat" onclick="changeColor(this)">C4</button>
+  <button class="seat" onclick="changeColor(this)">D1</button>
+  <button class="seat" onclick="changeColor(this)">D2</button>
+  <button class="seat" onclick="changeColor(this)">D3</button>
+  <button class="seat" onclick="changeColor(this)">D4</button>
+  <button class="seat" onclick="changeColor(this)">E1</button>
+  <button class="seat" onclick="changeColor(this)">E2</button>
+  <button class="seat" onclick="changeColor(this)">E3</button>
+  <button class="seat" onclick="changeColor(this)">E4</button>
+</div>
+    <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
+    <button class="main-btn" onclick="goToPayment()">จองตอนนี้ (699.-/ที่)</button>
   </div>
 
-  <label>ชื่อผู้จอง:</label>
-  <input type="text" id="customerName" placeholder="กรอกชื่อที่นี่">
-  <br><br>
-  <button onclick="goToPayment()">จอง</button>
+  <div id="page2" style="display:none;">
+    <h2>💳 ชำระเงิน</h2>
+    <div class="payment-summary">
+      <div class="summary-item"><span>ผู้จอง:</span> <span id="summaryName">-</span></div>
+      <div class="summary-item"><span>ที่นั่ง:</span> <span id="summarySeats">-</span></div>
+      <div class="total-price"><span>ยอดรวม:</span> <span id="summaryTotal">0 บาท</span></div>
+    </div>
+    <div class="qr-section">
+      <img src="qr.png" alt="QR Code">
+      <p>สแกนเพื่อโอนเงิน</p>
+    </div>
+    <label for="slip" class="custom-file-upload">📸 แนบสลิปที่นี่</label>
+    <input type="file" id="slip" accept="image/*" onchange="updateFileName(this)">
+    <p id="fileName" style="font-size:0.8rem; color:green;"></p>
+    <button class="main-btn" onclick="finishPayment()">ยืนยันการชำระเงิน</button>
+  </div>
 
+  <div id="page3" style="display:none;">
+    <h1>🎉 จองสำเร็จแล้ว!</h1>
+    <p>แล้วเจอกันในงานเด้อจ้า ❤️</p>
+  </div>
 </div>
-
-
-<!-- ✅ PAGE 2 -->
-<div id="page2" style="display:none; text-align:center;">
-
-  <h2>💳 ชำระเงิน</h2>
-  <p>สแกน QR เพื่อโอนเงิน</p>
-
-  <img src="qr.png" width="250"><br><br>
-
-  <input type="file" id="slip" accept="image/*"><br><br>
-
-  <button onclick="finishPayment()">เสร็จสิ้น</button>
-
-</div>
-
-
-<!-- ✅ PAGE 3 -->
-<div id="page3" style="display:none; text-align:center;">
-
-  <h1>🎉 ขอบคุณที่จองพาแลงกับเฮาเด้อจ้า ❤️</h1>
-
-</div>
-
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
-    onSnapshot, 
-    query 
-  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
-  authDomain: "seat-booking-757dc.firebaseapp.com",
-  projectId: "seat-booking-757dc",
-  storageBucket: "seat-booking-757dc.firebasestorage.app",
-  messagingSenderId: "247801765305",
-  appId: "1:247801765305:web:b301a58aee401195706a68",
-  measurementId: "G-4WLFBTCGY5"
+    authDomain: "seat-booking-757dc.firebaseapp.com",
+    projectId: "seat-booking-757dc",
+    storageBucket: "seat-booking-757dc.firebasestorage.app",
+    messagingSenderId: "247801765305",
+    appId: "1:247801765305:web:b301a58aee401195706a68"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -130,9 +170,8 @@
   let selectedSeatsForPayment = [];
   let alreadyBookedSeats = [];
 
-  // 1. ดึงข้อมูลที่นั่งที่จองแล้วแบบ Real-time
-  const q = query(collection(db, "bookings"));
-  onSnapshot(q, (snapshot) => {
+  // 1. ดึงข้อมูล Real-time
+  onSnapshot(query(collection(db, "bookings")), (snapshot) => {
     alreadyBookedSeats = snapshot.docs.map(doc => doc.data().seat);
     updateSeatUI();
   });
@@ -141,100 +180,82 @@
     document.querySelectorAll(".seat").forEach(btn => {
       if (alreadyBookedSeats.includes(btn.innerText)) {
         btn.classList.add("booked");
-        btn.classList.remove("selected");
         btn.disabled = true;
       }
     });
   }
 
-  // 2. ฟังก์ชันบีบอัดรูปภาพ (Image Compression)
+  // 2. บีบอัดรูป
   async function compressImage(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = (event) => {
+      reader.onload = (e) => {
         const img = new Image();
-        img.src = event.target.result;
+        img.src = e.target.result;
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800; // ปรับความกว้างสูงสุดเป็น 800px
-          let width = img.width;
-          let height = img.height;
-
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
           const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          // บีบอัดคุณภาพเหลือ 70% (0.7)
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-          resolve(dataUrl);
+          const MAX_W = 800;
+          let w = img.width, h = img.height;
+          if (w > MAX_W) { h *= MAX_W / w; w = MAX_W; }
+          canvas.width = w; canvas.height = h;
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.7));
         };
       };
     });
   }
 
-  window.changeColor = function(button) {
-    if (button.classList.contains("booked")) return;
-    button.classList.toggle("selected");
+  window.changeColor = (btn) => {
+    if (!btn.classList.contains("booked")) btn.classList.toggle("selected");
   };
 
-  window.goToPayment = function() {
+  window.goToPayment = () => {
     const name = document.getElementById("customerName").value.trim();
-    const selectedSeats = document.querySelectorAll(".selected");
+    const selected = document.querySelectorAll(".selected");
+    if (!name || selected.length === 0) return alert("กรุณาใส่ชื่อและเลือกที่นั่ง");
 
-    if (!name || selectedSeats.length === 0) {
-      alert("กรุณากรอกชื่อและเลือกที่นั่งให้เรียบร้อยจ้า");
-      return;
-    }
+    selectedSeatsForPayment = Array.from(selected).map(s => s.innerText);
+    const total = selectedSeatsForPayment.length * 699;
 
-    selectedSeatsForPayment = Array.from(selectedSeats).map(s => s.innerText);
+    document.getElementById("summaryName").innerText = name;
+    document.getElementById("summarySeats").innerText = selectedSeatsForPayment.join(", ");
+    document.getElementById("summaryTotal").innerText = total.toLocaleString() + " บาท";
+    
     document.getElementById("page1").style.display = "none";
     document.getElementById("page2").style.display = "block";
   };
 
-  window.finishPayment = async function() {
-    const name = document.getElementById("customerName").value.trim();
-    const slipFile = document.getElementById("slip").files[0];
+  window.updateFileName = (input) => {
+    document.getElementById("fileName").innerText = input.files[0] ? "เลือกไฟล์แล้ว" : "";
+  };
 
-    if (!slipFile) {
-      alert("รบกวนแนบสลิปเพื่อยืนยันการโอนเงินด้วยน้า");
-      return;
-    }
+  window.finishPayment = async () => {
+    const slip = document.getElementById("slip").files[0];
+    if (!slip) return alert("กรุณาแนบสลิป");
 
-    // แสดงสถานะกำลังโหลด (Optionally)
     const btn = document.querySelector("#page2 button");
-    btn.disabled = true;
-    btn.innerText = "กำลังบันทึกข้อมูล...";
+    btn.disabled = true; btn.innerText = "กำลังบันทึก...";
 
     try {
-      // บีบอัดรูปก่อนส่ง
-      const compressedBase64 = await compressImage(slipFile);
-
-      for (const seatNumber of selectedSeatsForPayment) {
+      const img = await compressImage(slip);
+      for (const s of selectedSeatsForPayment) {
         await addDoc(collection(db, "bookings"), {
-          name: name,
-          seat: seatNumber,
-          slipBase64: compressedBase64,
+          name: document.getElementById("customerName").value,
+          seat: s,
+          slipBase64: img,
+          totalPaid: selectedSeatsForPayment.length * 699,
           timestamp: new Date()
         });
       }
-
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "block";
-    } catch (error) {
-      console.error(error);
-      alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้งนะ");
+    } catch (e) {
+      alert("พลาด! ลองใหม่นะ");
       btn.disabled = false;
-      btn.innerText = "เสร็จสิ้น";
     }
   };
 </script>
-
 </body>
 </html>
