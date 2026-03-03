@@ -124,11 +124,10 @@
   <button class="seat" onclick="changeColor(this)">E3</button>
   <button class="seat" onclick="changeColor(this)">E4</button>
 </div>
-    <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
-    <input type="text" id="Number" placeholder="เบอร์โทรผู้จอง">
-    <button class="main-btn" onclick="goToPayment()">จองเลย (699.-/ที่)</button>
-  </div>
-
+  <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
+<input type="text" id="customerPhone" placeholder="เบอร์โทรศัพท์ติดต่อ"> 
+<button class="main-btn" onclick="goToPayment()">จองตอนนี้ (699.-/ที่)</button>
+</div>
   <div id="page2" style="display:none;">
     <h2>💳 ชำระเงิน</h2>
     <div class="payment-summary">
@@ -139,7 +138,8 @@
     <div class="qr-section">
       <img src="qr.png" alt="QR Code">
       <p>สแกนเพื่อโอนเงิน</p>
-    </div>
+  
+  </div>
     <label for="slip" class="custom-file-upload">📸 แนบสลิปที่นี่</label>
     <input type="file" id="slip" accept="image/*" onchange="updateFileName(this)">
     <p id="fileName" style="font-size:0.8rem; color:green;"></p>
@@ -233,8 +233,11 @@
   };
 
   window.finishPayment = async () => {
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim(); // 🆕 ดึงค่าเบอร์โทร
     const slip = document.getElementById("slip").files[0];
-    if (!slip) return alert("กรุณาแนบสลิป");
+
+    if (!slip || !phone) return alert("กรุณากรอกเบอร์โทรและแนบสลิปด้วยน้า");
 
     const btn = document.querySelector("#page2 button");
     btn.disabled = true; btn.innerText = "กำลังบันทึก...";
@@ -243,7 +246,8 @@
       const img = await compressImage(slip);
       for (const s of selectedSeatsForPayment) {
         await addDoc(collection(db, "bookings"), {
-          name: document.getElementById("customerName").value,
+          name: name,
+          phone: phone,      // 🆕 ส่งเบอร์โทรไป Firebase
           seat: s,
           slipBase64: img,
           totalPaid: selectedSeatsForPayment.length * 699,
@@ -253,10 +257,10 @@
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "block";
     } catch (e) {
-      alert("พลาด! ลองใหม่นะ");
+      alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้งนะ");
       btn.disabled = false;
     }
-  };
+};
 </script>
 </body>
 </html>
