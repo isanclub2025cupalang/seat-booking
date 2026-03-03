@@ -8,14 +8,14 @@
       --bg-color: #f0f2f5;
       --card-bg: rgba(255, 255, 255, 0.95);
       --available: #2ecc71;
-      --selected: #6c5ce7;
+      --selected: #d991cc;
       --booked: #dfe6e9;
       --text-main: #2d3436;
     }
 
     body {
       font-family: 'Kanit', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #667eea 0%, #ffaaf4 100%);
       min-height: 100vh;
       margin: 0;
       display: flex;
@@ -95,7 +95,7 @@
 
 <div class="container">
   <div id="page1">
-    <h1>🎬 จองที่นั่ง</h1>
+    <h1>จองที่นั่ง</h1>
     <div class="legend">
       <div class="legend-item"><div class="dot" style="border:1px solid var(--available)"></div> ว่าง</div>
       <div class="legend-item"><div class="dot" style="background:var(--selected)"></div> เลือก</div>
@@ -125,7 +125,8 @@
   <button class="seat" onclick="changeColor(this)">E4</button>
 </div>
     <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
-    <button class="main-btn" onclick="goToPayment()">จองตอนนี้ (699.-/ที่)</button>
+    <input type="text" id="Number" placeholder="เบอร์โทรผู้จอง">
+    <button class="main-btn" onclick="goToPayment()">จองเลย (699.-/ที่)</button>
   </div>
 
   <div id="page2" style="display:none;">
@@ -146,7 +147,7 @@
   </div>
 
   <div id="page3" style="display:none;">
-    <h1>🎉 จองสำเร็จแล้ว!</h1>
+    <h1>🎉จองสำเร็จแล้ว!</h1>
     <p>แล้วเจอกันในงานเด้อจ้า ❤️</p>
   </div>
 </div>
