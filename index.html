@@ -1,266 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-  <title>Seat Booking</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>อีสานจุฬาฯ พาแลง 2569</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-color: #f0f2f5;
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --available: #2ecc71;
-      --selected: #d991cc;
-      --booked: #dfe6e9;
-      --text-main: #2d3436;
-    }
-
     body {
       font-family: 'Kanit', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #ffaaf4 100%);
-      min-height: 100vh;
       margin: 0;
+      background-color: #fdfaf0; /* โทนสีครีมตามโปสเตอร์ */
+      color: #333;
+    }
+    .hero {
+      background: linear-gradient(rgba(253, 250, 240, 0.3), rgba(253, 250, 240, 0.9)), 
+                  url('https://raw.githubusercontent.com/your-repo/path/to/image.png'); /* คุณสามารถอัปโหลดรูปโปสเตอร์ขึ้นโฮสต์แล้วเปลี่ยน URL ตรงนี้ได้ */
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center top;
+      height: 70vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: flex-end;
       align-items: center;
-      padding: 20px;
-    }
-
-    .container {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-      width: 100%;
-      max-width: 400px;
       text-align: center;
+      padding-bottom: 30px;
     }
-
-    h1, h2 { margin-top: 0; color: var(--text-main); }
-
-    .legend { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 0.8rem; }
-    .legend-item { display: flex; align-items: center; gap: 5px; }
-    .dot { width: 12px; height: 12px; border-radius: 3px; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-
-    .seat {
-      aspect-ratio: 1/1;
-      border-radius: 10px;
-      border: 2px solid var(--available);
+    .content {
+      max-width: 800px;
+      margin: 0 auto 50px;
       background: white;
-      color: var(--available);
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 10px 40px rgba(181, 44, 88, 0.1); /* เงาสีชมพูอ่อนๆ */
+      text-align: center;
+      border-top: 5px solid #b52c58; /* สีชมพูเข้มตามชื่อพาแลง */
     }
-
-    .seat.selected { background: var(--selected); border-color: var(--selected); color: white; }
-    .seat.booked { background: var(--booked); border-color: var(--booked); color: #b2bec3; cursor: not-allowed; }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
+    h1 { color: #b52c58; font-size: 2.5rem; margin-bottom: 10px; }
+    .sub-title { font-size: 1.3rem; color: #d68c2d; font-weight: 600; margin-bottom: 20px; }
+    
+    .info-list {
+      text-align: left;
+      display: inline-block;
+      margin: 20px 0;
     }
+    .info-item { margin-bottom: 15px; font-size: 1.1rem; }
+    .info-item span { color: #b52c58; font-weight: bold; margin-right: 10px; }
 
-    .main-btn {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(to right, #6c5ce7, #a29bfe);
+    .booking-btn {
+      display: inline-block;
+      padding: 18px 50px;
+      background: linear-gradient(135deg, #b52c58 0%, #d68c2d 100%);
       color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
+      text-decoration: none;
+      font-size: 1.4rem;
       font-weight: bold;
-      cursor: pointer;
+      border-radius: 50px;
+      transition: 0.3s;
+      margin-top: 30px;
+      box-shadow: 0 8px 20px rgba(181, 44, 88, 0.3);
     }
-
-    /* Payment Styles */
-    .payment-summary { background: rgba(108, 92, 231, 0.1); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; }
-    .summary-item { display: flex; justify-content: space-between; margin-bottom: 5px; }
-    .total-price { border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; color: var(--selected); font-size: 1.2rem; }
-    .qr-section img { width: 200px; border-radius: 10px; margin: 15px 0; }
-    .custom-file-upload { display: block; padding: 10px; background: #eee; border-radius: 10px; cursor: pointer; margin-bottom: 15px; }
+    .booking-btn:hover { transform: scale(1.05); box-shadow: 0 12px 25px rgba(181, 44, 88, 0.5); }
+    
+    .club-name { font-size: 0.9rem; color: #666; margin-top: 50px; }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div id="page1">
-    <h1>จองที่นั่ง</h1>
-    <div class="legend">
-      <div class="legend-item"><div class="dot" style="border:1px solid var(--available)"></div> ว่าง</div>
-      <div class="legend-item"><div class="dot" style="background:var(--selected)"></div> เลือก</div>
-      <div class="legend-item"><div class="dot" style="background:var(--booked)"></div> จองแล้ว</div>
+  <div class="hero">
+    <h1>อีสานจุฬาฯ พาแลง</h1>
+    <div class="sub-title">กินข้าวแลงแญงศิลป์...ถิ่นนครพนม</div>
+  </div>
+
+  <div class="content">
+    <p style="font-size: 1.2rem; line-height: 1.6;">
+      วิจิตตระการตา... มนต์เสน่ห์ลุ่มน้ำโขง<br>
+      ชมรมศิลปวัฒนธรรมอีสาน จุฬาลงกรณ์มหาวิทยาลัย ภูมิใจนำเสนอ
+    </p>
+
+    <div class="info-list">
+      <div class="info-item"><span>📅 วันที่จัดงาน:</span> 28 มีนาคม 2569 </div>
+      <div class="info-item"><span>📍 สถานที่:</span> สนามหน้าคณะวิทยาศาสตร์การกีฬาจุฬาลงกรณ์มหาวิทยาลัย</div>
+      <div class="info-item"><span>💰 ราคาพาข้าว:</span> 699 บาท / พา นั่งได้ 5 คน</div>
+      <div class="info-item"><span>🎭 กิจกรรม:</span> การแสดงศิลปวัฒนธรรมและรับประทานข้าวแลงนำกัน</div>
     </div>
 
-    <div class="grid">
-  <button class="seat" onclick="changeColor(this)">A1</button>
-  <button class="seat" onclick="changeColor(this)">A2</button>
-  <button class="seat" onclick="changeColor(this)">A3</button>
-  <button class="seat" onclick="changeColor(this)">A4</button>
-  <button class="seat" onclick="changeColor(this)">B1</button>
-  <button class="seat" onclick="changeColor(this)">B2</button>
-  <button class="seat" onclick="changeColor(this)">B3</button>
-  <button class="seat" onclick="changeColor(this)">B4</button>
-  <button class="seat" onclick="changeColor(this)">C1</button>
-  <button class="seat" onclick="changeColor(this)">C2</button>
-  <button class="seat" onclick="changeColor(this)">C3</button>
-  <button class="seat" onclick="changeColor(this)">C4</button>
-  <button class="seat" onclick="changeColor(this)">D1</button>
-  <button class="seat" onclick="changeColor(this)">D2</button>
-  <button class="seat" onclick="changeColor(this)">D3</button>
-  <button class="seat" onclick="changeColor(this)">D4</button>
-  <button class="seat" onclick="changeColor(this)">E1</button>
-  <button class="seat" onclick="changeColor(this)">E2</button>
-  <button class="seat" onclick="changeColor(this)">E3</button>
-  <button class="seat" onclick="changeColor(this)">E4</button>
-</div>
-  <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
-<input type="text" id="customerPhone" placeholder="เบอร์โทรศัพท์ติดต่อ"> 
-<button class="main-btn" onclick="goToPayment()">จองตอนนี้ (699.-/ที่)</button>
-</div>
-  <div id="page2" style="display:none;">
-    <h2>💳 ชำระเงิน</h2>
-    <div class="payment-summary">
-      <div class="summary-item"><span>ผู้จอง:</span> <span id="summaryName">-</span></div>
-      <div class="summary-item"><span>ที่นั่ง:</span> <span id="summarySeats">-</span></div>
-      <div class="total-price"><span>ยอดรวม:</span> <span id="summaryTotal">0 บาท</span></div>
-    </div>
-    <div class="qr-section">
-      <img src="qr.png" alt="QR Code">
-      <p>สแกนเพื่อโอนเงิน</p>
-  
-  </div>
-    <label for="slip" class="custom-file-upload">📸 แนบสลิปที่นี่</label>
-    <input type="file" id="slip" accept="image/*" onchange="updateFileName(this)">
-    <p id="fileName" style="font-size:0.8rem; color:green;"></p>
-    <button class="main-btn" onclick="finishPayment()">ยืนยันการชำระเงิน</button>
-  </div>
-
-  <div id="page3" style="display:none;">
-    <h1>🎉จองสำเร็จแล้ว!</h1>
-    <p>แล้วเจอกันในงานเด้อจ้า ❤️</p>
-  </div>
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
-    authDomain: "seat-booking-757dc.firebaseapp.com",
-    projectId: "seat-booking-757dc",
-    storageBucket: "seat-booking-757dc.firebasestorage.app",
-    messagingSenderId: "247801765305",
-    appId: "1:247801765305:web:b301a58aee401195706a68"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  let selectedSeatsForPayment = [];
-  let alreadyBookedSeats = [];
-
-  // 1. ดึงข้อมูล Real-time
-  onSnapshot(query(collection(db, "bookings")), (snapshot) => {
-    alreadyBookedSeats = snapshot.docs.map(doc => doc.data().seat);
-    updateSeatUI();
-  });
-
-  function updateSeatUI() {
-    document.querySelectorAll(".seat").forEach(btn => {
-      if (alreadyBookedSeats.includes(btn.innerText)) {
-        btn.classList.add("booked");
-        btn.disabled = true;
-      }
-    });
-  }
-
-  // 2. บีบอัดรูป
-  async function compressImage(file) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (e) => {
-        const img = new Image();
-        img.src = e.target.result;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          const MAX_W = 800;
-          let w = img.width, h = img.height;
-          if (w > MAX_W) { h *= MAX_W / w; w = MAX_W; }
-          canvas.width = w; canvas.height = h;
-          ctx.drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', 0.7));
-        };
-      };
-    });
-  }
-
-  window.changeColor = (btn) => {
-    if (!btn.classList.contains("booked")) btn.classList.toggle("selected");
-  };
-
-  window.goToPayment = () => {
-    const name = document.getElementById("customerName").value.trim();
-    const selected = document.querySelectorAll(".selected");
-    if (!name || selected.length === 0) return alert("กรุณาใส่ชื่อและเลือกที่นั่ง");
-
-    selectedSeatsForPayment = Array.from(selected).map(s => s.innerText);
-    const total = selectedSeatsForPayment.length * 699;
-
-    document.getElementById("summaryName").innerText = name;
-    document.getElementById("summarySeats").innerText = selectedSeatsForPayment.join(", ");
-    document.getElementById("summaryTotal").innerText = total.toLocaleString() + " บาท";
+    <br>
     
-    document.getElementById("page1").style.display = "none";
-    document.getElementById("page2").style.display = "block";
-  };
+    <a href="booking.html" class="booking-btn">จองพาแลง</a>
 
-  window.updateFileName = (input) => {
-    document.getElementById("fileName").innerText = input.files[0] ? "เลือกไฟล์แล้ว" : "";
-  };
+    <div class="club-name">
+      ชมรมศิลปวัฒนธรรมอีสาน จุฬาลงกรณ์มหาวิทยาลัย<br>
+      Isan Arts and Culture Club Chulalongkorn University
+    </div>
+  </div>
 
-  window.finishPayment = async () => {
-    const name = document.getElementById("customerName").value.trim();
-    const phone = document.getElementById("customerPhone").value.trim(); // 🆕 ดึงค่าเบอร์โทร
-    const slip = document.getElementById("slip").files[0];
-
-    if (!slip || !phone) return alert("กรุณากรอกเบอร์โทรและแนบสลิปด้วยน้า");
-
-    const btn = document.querySelector("#page2 button");
-    btn.disabled = true; btn.innerText = "กำลังบันทึก...";
-
-    try {
-      const img = await compressImage(slip);
-      for (const s of selectedSeatsForPayment) {
-        await addDoc(collection(db, "bookings"), {
-          name: name,
-          phone: phone,      // 🆕 ส่งเบอร์โทรไป Firebase
-          seat: s,
-          slipBase64: img,
-          totalPaid: selectedSeatsForPayment.length * 699,
-          timestamp: new Date()
-        });
-      }
-      document.getElementById("page2").style.display = "none";
-      document.getElementById("page3").style.display = "block";
-    } catch (e) {
-      alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้งนะ");
-      btn.disabled = false;
-    }
-};
-</script>
 </body>
 </html>
