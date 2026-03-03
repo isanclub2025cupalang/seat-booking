@@ -4,84 +4,43 @@
   <title>Seat Booking</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-color: #f0f2f5;
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --available: #2ecc71;
-      --selected: #d991cc;
-      --booked: #dfe6e9;
-      --text-main: #2d3436;
-    }
+  :root {
+    --bg-color: #fdfaf0;      /* สีครีมสว่างจากโปสเตอร์ */
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --available: #d68c2d;     /* สีทอง/น้ำตาลทอง สำหรับที่นั่งว่าง */
+    --selected: #b52c58;      /* สีชมพูเข้ม สำหรับที่นั่งที่เลือก */
+    --booked: #e0e0e0;        /* สีเทาอ่อน สำหรับที่นั่งที่เต็มแล้ว */
+    --text-main: #333333;
+  }
 
-    body {
-      font-family: 'Kanit', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #ffaaf4 100%);
-      min-height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+  body {
+    background: linear-gradient(135deg, #fdfaf0 0%, #f7e9d7 100%);
+    font-family: 'Kanit', sans-serif;
+  }
 
-    .container {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
+  .seat {
+    border: 2px solid var(--available);
+    color: var(--available);
+    background: white;
+  }
 
-    h1, h2 { margin-top: 0; color: var(--text-main); }
+  .seat.selected {
+    background: var(--selected); /* สีชมพูเข้ม */
+    border-color: var(--selected);
+    color: white;
+    box-shadow: 0 5px 15px rgba(181, 44, 88, 0.4);
+  }
 
-    .legend { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 0.8rem; }
-    .legend-item { display: flex; align-items: center; gap: 5px; }
-    .dot { width: 12px; height: 12px; border-radius: 3px; }
+  .main-btn {
+    background: linear-gradient(to right, #b52c58, #d68c2d); /* ชมพูไปทอง */
+    border-radius: 50px;
+  }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-
-    .seat {
-      aspect-ratio: 1/1;
-      border-radius: 10px;
-      border: 2px solid var(--available);
-      background: white;
-      color: var(--available);
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .seat.selected { background: var(--selected); border-color: var(--selected); color: white; }
-    .seat.booked { background: var(--booked); border-color: var(--booked); color: #b2bec3; cursor: not-allowed; }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
-    }
-
-    .main-btn {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(to right, #6c5ce7, #a29bfe);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
+  .empty-space {
+    width: 100%;
+    height: 100%;
+    visibility: hidden; /* ซ่อนไว้ไม่ให้เห็นแต่ยังกินพื้นที่อยู่เพื่อให้ Grid ไม่เบี้ยว */
+  }
 
     /* Payment Styles */
     .payment-summary { background: rgba(108, 92, 231, 0.1); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; }
@@ -102,27 +61,36 @@
       <div class="legend-item"><div class="dot" style="background:var(--booked)"></div> จองแล้ว</div>
     </div>
 
-    <div class="grid">
+   <div class="grid">
   <button class="seat" onclick="changeColor(this)">A1</button>
   <button class="seat" onclick="changeColor(this)">A2</button>
   <button class="seat" onclick="changeColor(this)">A3</button>
+  <div class="aisle"></div>
   <button class="seat" onclick="changeColor(this)">A4</button>
+  <button class="seat" onclick="changeColor(this)">A5</button>
+  <button class="seat" onclick="changeColor(this)">A6</button>
+
   <button class="seat" onclick="changeColor(this)">B1</button>
   <button class="seat" onclick="changeColor(this)">B2</button>
   <button class="seat" onclick="changeColor(this)">B3</button>
+  <div class="aisle"></div>
   <button class="seat" onclick="changeColor(this)">B4</button>
+  <button class="seat" onclick="changeColor(this)">B5</button>
+  <button class="seat" onclick="changeColor(this)">B6</button>
+
   <button class="seat" onclick="changeColor(this)">C1</button>
   <button class="seat" onclick="changeColor(this)">C2</button>
   <button class="seat" onclick="changeColor(this)">C3</button>
+  <div class="aisle"></div>
   <button class="seat" onclick="changeColor(this)">C4</button>
+  <button class="seat" onclick="changeColor(this)">C5</button>
+  <button class="seat" onclick="changeColor(this)">C6</button>
+
   <button class="seat" onclick="changeColor(this)">D1</button>
   <button class="seat" onclick="changeColor(this)">D2</button>
   <button class="seat" onclick="changeColor(this)">D3</button>
-  <button class="seat" onclick="changeColor(this)">D4</button>
-  <button class="seat" onclick="changeColor(this)">E1</button>
-  <button class="seat" onclick="changeColor(this)">E2</button>
-  <button class="seat" onclick="changeColor(this)">E3</button>
-  <button class="seat" onclick="changeColor(this)">E4</button>
+  <div class="aisle"></div> <div class="empty-space"></div> <div class="empty-space"></div>
+  <div class="empty-space"></div>
 </div>
   <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
 <input type="text" id="customerPhone" placeholder="เบอร์โทรศัพท์ติดต่อ"> 
@@ -147,8 +115,8 @@
   </div>
 
   <div id="page3" style="display:none;">
-    <h1>🎉จองสำเร็จแล้ว!</h1>
-    <p>แล้วเจอกันในงานเด้อจ้า ❤️</p>
+    <h1> 🎉จองสำเร็จแล้ว </h1>
+    <p>แล้วพ้อกันในงานเด้อจ้า ❤️</p>
   </div>
 </div>
 
