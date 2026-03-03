@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>Seat Booking</title>
@@ -81,8 +81,20 @@
 <label>ชื่อผู้จอง:</label>
 <input type="text" id="customerName" placeholder="กรอกชื่อที่นี่">
 <br><br>
-<button onclick="confirmBooking()">ยืนยันการจอง</button>
+<button onclick="startBooking()">จอง</button>
+<div id="paymentSection" style="display:none; margin-top:20px;">
 
+  <h2>💳 ชำระเงิน</h2>
+  <p>สแกน QR เพื่อโอนเงิน</p>
+
+  <!-- ใส่รูป QR ของเธอตรง src -->
+  <img src="qr.png" width="250"><br><br>
+
+  <input type="file" id="slip" accept="image/*"><br><br>
+
+  <button onclick="finishPayment()">เสร็จสิ้น</button>
+
+</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
@@ -99,6 +111,7 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+ let selectedSeatsForPayment = [];
 
   window.changeColor = function(button) {
     if (button.classList.contains("booked")) return;
@@ -151,6 +164,80 @@
   }
 
   loadBookings();
+  window.startBooking = function() {
+
+  const selectedSeats = document.querySelectorAll(".selected");
+
+  if (selectedSeats.length === 0) {
+    alert("กรุณาเลือกที่นั่งก่อน");
+    return;
+  }
+
+  selectedSeatsForPayment = [];
+
+  selectedSeats.forEach(seat => {
+    selectedSeatsForPayment.push(seat.innerText);
+  });
+
+  document.getElementById("paymentSection").style.display = "block";
+};
+window.finishPayment = async function() {
+
+  const name = document.getElementById("customerName").value.trim();
+  const slipFile = document.getElementById("slip").files[0];
+
+  if (name === "") {
+    alert("กรุณากรอกชื่อผู้จอง");
+    return;
+  }
+
+  if (selectedSeatsForPayment.length === 0) {
+    alert("ไม่มีที่นั่งที่เลือกไว้");
+    return;
+  }
+
+  if (!slipFile) {
+    alert("กรุณาแนบสลิปก่อน");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = async function(e) {
+
+    const base64Slip = e.target.result; // แปลงเป็นข้อความ
+
+    for (const seatNumber of selectedSeatsForPayment) {
+
+      await addDoc(collection(db, "bookings"), {
+        name: name,
+        seat: seatNumber,
+        slipBase64: base64Slip,
+        timestamp: new Date()
+      });
+
+      const seats = document.querySelectorAll(".seat");
+      seats.forEach(seat => {
+        if (seat.innerText === seatNumber) {
+          seat.classList.remove("selected");
+          seat.classList.add("booked");
+          seat.title = "จองโดย: " + name;
+        }
+      });
+    }
+
+    alert("จองสำเร็จ 🎉");
+
+    document.getElementById("customerName").value = "";
+    document.getElementById("slip").value = "";
+    document.getElementById("paymentSection").style.display = "none";
+    selectedSeatsForPayment = [];
+
+  };
+
+  reader.readAsDataURL(slipFile); // แปลงไฟล์เป็น base64
+};
+
 </script>
 
 </body>
