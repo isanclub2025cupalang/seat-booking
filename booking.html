@@ -5,12 +5,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   
   <style>
-    /* ✅ CSS อยู่ตรงนี้ครับ (คุมโทน ชมพู-ทอง-ครีม) */
     :root {
       --bg-color: #fdfaf0;
       --card-bg: rgba(255, 255, 255, 0.95);
-      --available: #d68c2d;     /* สีทอง */
-      --selected: #b52c58;      /* สีชมพูพาแลง */
+      --available: #d68c2d;
+      --selected: #b52c58;
       --booked: #e0e0e0;
       --text-main: #2d3436;
     }
@@ -37,7 +36,6 @@
       text-align: center;
     }
 
-    /* จัดการผังที่นั่ง 3-เว้น-3 */
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr) 0.5fr repeat(3, 1fr);
@@ -59,7 +57,30 @@
     .seat.selected { background: var(--selected); border-color: var(--selected); color: white; }
     .seat.booked { background: var(--booked); border-color: var(--booked); color: #b2bec3; cursor: not-allowed; }
     .aisle { width: 100%; }
-    .empty-space { visibility: hidden; }
+
+    .stage-area {
+      width: 85%;
+      margin: 10px auto 25px;
+      padding: 12px;
+      background: linear-gradient(to right, #f7e9d7, #d68c2d, #f7e9d7);
+      border: 1px solid #d68c2d;
+      border-radius: 8px;
+      color: #b52c58;
+      font-weight: bold;
+      font-size: 1rem;
+      letter-spacing: 3px;
+      box-shadow: inset 0 0 10px rgba(181, 44, 88, 0.1);
+    }
+
+    .row-d-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    .row-d-container .seat { width: 55px; }
 
     input[type="text"] {
       width: 100%;
@@ -82,89 +103,55 @@
       cursor: pointer;
     }
 
-    /* ดีไซน์หน้าชำระเงินแบบที่คุณชอบ */
     .payment-summary { background: rgba(181, 44, 88, 0.05); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; }
     .summary-item { display: flex; justify-content: space-between; margin-bottom: 5px; }
     .total-price { border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; color: var(--selected); font-size: 1.2rem; }
     .qr-section img { width: 180px; border-radius: 10px; margin: 15px 0; border: 1px solid #eee; }
     .custom-file-upload { display: block; padding: 10px; background: #f0f2f5; border: 1px dashed var(--selected); border-radius: 10px; cursor: pointer; margin-bottom: 15px; color: var(--selected); }
     input[type="file"] { display: none; }
-  /* --- วางต่อท้าย CSS เดิมของคุณได้เลย --- */
-
-  /* ดีไซน์หน้าฮ่าน (สี่เหลี่ยมผืนผ้าตรงกลาง) */
-  .stage-area {
-    width: 85%;
-    margin: 10px auto 25px;
-    padding: 12px;
-    background: linear-gradient(to right, #f7e9d7, #d68c2d, #f7e9d7);
-    border: 1px solid #d68c2d;
-    border-radius: 8px;
-    color: #b52c58;
-    font-weight: bold;
-    font-size: 1rem;
-    letter-spacing: 3px;
-    box-shadow: inset 0 0 10px rgba(181, 44, 88, 0.1);
-  }
-
-  /* ปรับการวางตำแหน่งแถว D ให้มาอยู่ตรงกลาง */
-  .row-d-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px; /* ระยะห่างจากแถว C */
-    width: 100%;
-  }
-
-  .row-d-container .seat {
-    width: 55px; /* กำหนดขนาดให้คงที่สำหรับแถวกลาง */
-  }
   </style>
 </head>
 <body>
 
 <div class="container">
-    
-    <div id="page1">
-  <h2 style="color: var(--selected); margin-bottom: 15px;"> เลือกหม่องนั่งเลยพี่</h2>
-  
-  <div class="stage-area">✨ หน้าฮ้าน (STAGE) ✨</div>
+  <div id="page1">
+    <h2 style="color: var(--selected); margin-bottom: 15px;">เลือกหม่องนั่งเลยพี่</h2>
+    <div class="stage-area">✨ หน้าฮ่าน (STAGE) ✨</div>
+    <div class="grid">
+      <button class="seat" onclick="changeColor(this)">A1</button>
+      <button class="seat" onclick="changeColor(this)">A2</button>
+      <button class="seat" onclick="changeColor(this)">A3</button>
+      <div class="aisle"></div>
+      <button class="seat" onclick="changeColor(this)">A4</button>
+      <button class="seat" onclick="changeColor(this)">A5</button>
+      <button class="seat" onclick="changeColor(this)">A6</button>
 
-  <div class="grid">
-    <button class="seat" onclick="changeColor(this)">A1</button>
-    <button class="seat" onclick="changeColor(this)">A2</button>
-    <button class="seat" onclick="changeColor(this)">A3</button>
-    <div class="aisle"></div>
-    <button class="seat" onclick="changeColor(this)">A4</button>
-    <button class="seat" onclick="changeColor(this)">A5</button>
-    <button class="seat" onclick="changeColor(this)">A6</button>
+      <button class="seat" onclick="changeColor(this)">B1</button>
+      <button class="seat" onclick="changeColor(this)">B2</button>
+      <button class="seat" onclick="changeColor(this)">B3</button>
+      <div class="aisle"></div>
+      <button class="seat" onclick="changeColor(this)">B4</button>
+      <button class="seat" onclick="changeColor(this)">B5</button>
+      <button class="seat" onclick="changeColor(this)">B6</button>
 
-    <button class="seat" onclick="changeColor(this)">B1</button>
-    <button class="seat" onclick="changeColor(this)">B2</button>
-    <button class="seat" onclick="changeColor(this)">B3</button>
-    <div class="aisle"></div>
-    <button class="seat" onclick="changeColor(this)">B4</button>
-    <button class="seat" onclick="changeColor(this)">B5</button>
-    <button class="seat" onclick="changeColor(this)">B6</button>
-
-    <button class="seat" onclick="changeColor(this)">C1</button>
-    <button class="seat" onclick="changeColor(this)">C2</button>
-    <button class="seat" onclick="changeColor(this)">C3</button>
-    <div class="aisle"></div>
-    <button class="seat" onclick="changeColor(this)">C4</button>
-    <button class="seat" onclick="changeColor(this)">C5</button>
-    <button class="seat" onclick="changeColor(this)">C6</button>
+      <button class="seat" onclick="changeColor(this)">C1</button>
+      <button class="seat" onclick="changeColor(this)">C2</button>
+      <button class="seat" onclick="changeColor(this)">C3</button>
+      <div class="aisle"></div>
+      <button class="seat" onclick="changeColor(this)">C4</button>
+      <button class="seat" onclick="changeColor(this)">C5</button>
+      <button class="seat" onclick="changeColor(this)">C6</button>
+    </div>
+    <div class="row-d-container">
+      <button class="seat" onclick="changeColor(this)">D1</button>
+      <button class="seat" onclick="changeColor(this)">D2</button>
+      <button class="seat" onclick="changeColor(this)">D3</button>
+    </div>
+    <br>
+    <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
+    <input type="text" id="customerPhone" placeholder="เบอร์โทรศัพท์">
+    <button class="main-btn" onclick="goToPayment()">จองตอนนี้ (699.-/ที่)</button>
   </div>
-
-  <div class="row-d-container">
-    <button class="seat" onclick="changeColor(this)">D1</button>
-    <button class="seat" onclick="changeColor(this)">D2</button>
-    <button class="seat" onclick="changeColor(this)">D3</button>
-  </div>
-  <br>
-  <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
-  <input type="text" id="customerPhone" placeholder="เบอร์โทรศัพท์">
-  <button class="main-btn" onclick="goToPayment()">จองตอนนี้ (699.-/ที่)</button>
-</div>
 
   <div id="page2" style="display:none;">
     <h2 style="color: var(--selected);">จ่ายเงินหม่องนี้จ้า</h2>
@@ -184,18 +171,25 @@
     <button class="main-btn" onclick="finishPayment()">ยืนยันการชำระเงิน</button>
   </div>
 
-  <div id="page3" style="display:none;">
-    <h1 style="color: var(--selected);">🎉จองแล้วจ้า อย่าบิดเด้อ</h1>
-    <p> แล้วพ้อกันในงานเด้อจ้า ❤️</p>
+  <div id="page3" style="display:none; text-align: center;">
+    <h1 style="color: var(--selected); font-size: 2rem;">🎉 จองสำเร็จแล้ว!</h1>
+    <div style="background: #fff; border: 2px dashed var(--available); padding: 20px; border-radius: 15px; margin: 20px 0;">
+      <p style="margin: 5px 0;"><strong>ชื่อผู้จอง:</strong> <span id="finalName">-</span></p>
+      <p style="margin: 5px 0;"><strong>ที่นั่งของคุณ:</strong> <span id="finalSeats" style="color: var(--selected); font-size: 1.2rem;">-</span></p>
+      <p style="margin-top: 15px; color: #d63031; font-weight: bold;">⚠️ แคปหน้าจอนี้ไว้เด้อ เดี๋ยวลืมที่นั่งเจ้าของ</p>
+    </div>
+    <p style="font-size: 1.1rem;">แล้วเจอกันในงานพาแลงเด้อจ้า ❤️</p>
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+    <p style="color: #636e72; font-size: 0.9rem;">
+      หากมีข้อสงสัย โทร: <a href="tel:0648207815" style="color: var(--selected); text-decoration: none; font-weight: bold;">0648207815</a> (อ๊ะอาย ข้าวโพดหวาน)
+    </p>
   </div>
 </div>
 
 <script type="module">
-  // 1. นำเข้าฟังก์ชันจาก Firebase
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
   import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-  // 2. 🚩 แก้ไข Config เป็นของคุณเอง (ก๊อปปี้จากโปรเจกต์ Firebase ของคุณมาวาง)
   const firebaseConfig = {
     apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
     authDomain: "seat-booking-757dc.firebaseapp.com",
@@ -205,14 +199,12 @@
     appId: "1:247801765305:web:b301a58aee401195706a68"
   };
 
-  // 3. เริ่มต้นการทำงาน
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
   let selectedSeatsForPayment = [];
   let alreadyBookedSeats = [];
 
-  // 4. ระบบเช็กที่นั่งว่างแบบ Real-time
   onSnapshot(query(collection(db, "bookings")), (snapshot) => {
     alreadyBookedSeats = snapshot.docs.map(doc => doc.data().seat);
     updateSeatUI();
@@ -227,12 +219,10 @@
     });
   }
 
-  // 5. ฟังก์ชันเลือกที่นั่ง (เปลี่ยนสีเมื่อกด)
   window.changeColor = (btn) => {
     if (!btn.classList.contains("booked")) btn.classList.toggle("selected");
   };
 
-  // 6. ฟังก์ชันคำนวณเงินและไปหน้าจ่ายเงิน
   window.goToPayment = () => {
     const name = document.getElementById("customerName").value.trim();
     const phone = document.getElementById("customerPhone").value.trim();
@@ -255,12 +245,10 @@
     document.getElementById("page2").style.display = "block";
   };
 
-  // 7. ฟังก์ชันแสดงชื่อไฟล์สลิป
   window.updateFileName = (input) => {
     document.getElementById("fileName").innerText = input.files[0] ? "เลือกไฟล์แล้ว: " + input.files[0].name : "";
   };
 
-  // 8. ฟังก์ชันบีบอัดรูปภาพ
   async function compressImage(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -282,7 +270,6 @@
     });
   }
 
-  // 9. ฟังก์ชันบันทึกข้อมูลการจองลง Firebase
   window.finishPayment = async () => {
     const slip = document.getElementById("slip").files[0];
     if (!slip) {
@@ -309,6 +296,9 @@
           timestamp: new Date()
         });
       }
+
+      document.getElementById("finalName").innerText = name;
+      document.getElementById("finalSeats").innerText = selectedSeatsForPayment.join(", ");
       document.getElementById("page2").style.display = "none";
       document.getElementById("page3").style.display = "block";
     } catch (e) {
@@ -319,3 +309,5 @@
     }
   };
 </script>
+</body>
+</html>
