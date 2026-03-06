@@ -115,8 +115,8 @@
 
 <div class="container">
   <div id="page1">
-    <h2 style="color: var(--selected); margin-bottom: 15px;">เลือกหม่องนั่งเลยพี่</h2>
-    <div class="stage-area">✨ หน้าฮ่าน (STAGE) ✨</div>
+    <h2 style="color: var(--selected); margin-bottom: 15px;">เลือกหม่องนั่งเหมาะๆเลยพี่</h2>
+    <div class="stage-area">✨ หน้าฮ้าน (STAGE) ✨</div>
     <div class="grid">
       <button class="seat" onclick="changeColor(this)">A1</button>
       <button class="seat" onclick="changeColor(this)">A2</button>
@@ -148,9 +148,9 @@
       <button class="seat" onclick="changeColor(this)">D3</button>
     </div>
     <br>
-    <input type="text" id="customerName" placeholder="ชื่อผู้จองของคุณ">
-    <input type="text" id="customerPhone" placeholder="เบอร์โทรศัพท์">
-    <button class="main-btn" onclick="goToPayment()">จองตอนนี้ (699.-/ที่)</button>
+    <input type="text" id="customerName" placeholder="ชื่อคนจอง">
+    <input type="text" id="customerPhone" placeholder="ขอเบอร์นำเด้อจ้า">
+    <button class="main-btn" onclick="goToPayment()">จองตอนนี้ ราคาพิเศษ 699.-บาทต่อพา</button>
   </div>
 
   <div id="page2" style="display:none;">
@@ -163,9 +163,9 @@
     </div>
     <div class="qr-section">
       <img src="qr.png" alt="QR Code">
-      <p style="font-size: 0.9rem;">สแกนเพื่อโอนเงิน 699.-/ที่</p>
+      <p style="font-size: 0.9rem;">สแกนเพื่อโอนเงินได้เลยจ้า</p>
     </div>
-    <label for="slip" class="custom-file-upload">📸 แนบสลิปที่นี่</label>
+    <label for="slip" class="custom-file-upload">📸 แนบสลิปตรงนี้จ้า</label>
     <input type="file" id="slip" accept="image/*" onchange="updateFileName(this)">
     <p id="fileName" style="font-size:0.8rem; color:green;"></p>
     <button class="main-btn" onclick="finishPayment()">ยืนยันการชำระเงิน</button>
@@ -180,8 +180,8 @@
     </div>
     <p style="font-size: 1.1rem;">แล้วเจอกันในงานพาแลงเด้อจ้า ❤️</p>
     <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-    <p style="color: #636e72; font-size: 0.9rem;">
-      หากมีข้อสงสัย โทร: <a href="tel:0648207815" style="color: var(--selected); text-decoration: none; font-weight: bold;">0648207815</a> (อ๊ะอาย ข้าวโพดหวาน)
+    <p style="color: #636e72; font-size: 0.8rem;">
+      หากมีแนวสงสัย กรุณาโทร: <a href="tel:0648207815" style="color: var(--selected); text-decoration: none; font-weight: bold;">0648207815</a> (อ๊ะอาย ขายข้าวโพดหวาน)
     </p>
   </div>
 </div>
