@@ -2,148 +2,56 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - ระบบจัดการที่นั่ง</title>
+  <title>Admin - จัดการการจองพาแลง</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #6c5ce7;
-      --success: #00b894;
-      --danger: #ff7675;
-      --dark: #2d3436;
-      --bg: #f0f2f5;
-    }
-
-    body {
-      font-family: 'Kanit', sans-serif;
-      background-color: var(--bg);
-      margin: 0;
-      padding: 20px;
-    }
-
-    .dashboard { max-width: 1100px; margin: 0 auto; }
-
-    /* Header & Summary Cards */
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+    :root { --primary: #b52c58; --secondary: #d68c2d; --bg: #fdfaf0; }
+    body { font-family: 'Kanit', sans-serif; background: var(--bg); padding: 20px; }
+    .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    h2 { color: var(--primary); text-align: center; }
     
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      text-align: center;
-    }
-
-    .card h3 { margin: 0; color: #636e72; font-size: 0.9rem; }
-    .card p { margin: 10px 0 0; font-size: 1.8rem; font-weight: 600; color: var(--primary); }
-
-    /* Table Section */
-    .table-container {
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      overflow-x: auto;
-    }
-
-    table { width: 100%; border-collapse: collapse; min-width: 800px; }
-    th { text-align: left; padding: 15px; border-bottom: 2px solid #f0f2f5; color: #636e72; font-weight: 400; }
-    td { padding: 15px; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
-
-    .seat-badge {
-      background: var(--primary);
-      color: white;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-weight: bold;
-    }
-
-    /* Buttons */
-    .btn {
-      border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: 'Kanit', sans-serif;
-      transition: 0.3s;
-    }
-    .btn-view { background: rgba(108, 92, 231, 0.1); color: var(--primary); }
-    .btn-view:hover { background: var(--primary); color: white; }
-    .btn-delete { background: rgba(255, 118, 117, 0.1); color: var(--danger); margin-left: 5px; }
-    .btn-delete:hover { background: var(--danger); color: white; }
-
-    /* Modal สำหรับดูสลิป */
-    #modal {
-      display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.9); z-index: 1000; text-align:center; padding-top:40px;
-    }
-    #modal img { max-width: 90%; max-height: 80%; border-radius: 10px; border: 5px solid white; }
-    .close-modal { color: white; margin-top: 20px; cursor: pointer; display: block; font-size: 1.2rem; }
-
-    .search-box {
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      width: 300px;
-      font-family: 'Kanit';
-      font-size: 1rem;
-    }
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .card { background: var(--bg); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #eee; }
+    .card h3 { margin: 0; color: var(--secondary); }
+    
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; border: 1px solid #eee; text-align: left; }
+    th { background: var(--primary); color: white; }
+    
+    .btn-excel { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+    .btn-view { background: var(--secondary); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
   </style>
 </head>
 <body>
 
-  <div class="dashboard">
-    <div class="header">
-      <h1>📊 ระบบจัดการการจอง (แอดมิน)</h1>
-      <input type="text" id="searchInput" class="search-box" placeholder="🔍 ค้นหาชื่อหรือเบอร์โทร..." onkeyup="filterTable()">
-    </div>
-
-    <div class="summary-grid">
-      <div class="card">
-        <h3>จำนวนที่นั่งที่จองแล้ว</h3>
-        <p id="totalSeats">0</p>
-      </div>
-      <div class="card">
-        <h3>ยอดรายได้รวม</h3>
-        <p id="totalRevenue" style="color: var(--success);">0 ฿</p>
-      </div>
-    </div>
-
-    <div class="table-container">
-      <table id="bookingTable">
-        <thead>
-          <tr>
-            <th>ที่นั่ง</th>
-            <th>ชื่อผู้จอง</th>
-            <th>เบอร์โทรศัพท์</th>
-            <th>ยอดที่โอน (699.-)</th>
-            <th>เวลาที่จอง</th>
-            <th>หลักฐาน/จัดการ</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          </tbody>
-      </table>
-    </div>
+<div class="container">
+  <h2>📊 ระบบจัดการหลังบ้าน - พาแลง</h2>
+  
+  <div class="stats">
+    <div class="card"><h3>ที่นั่งที่จองแล้ว</h3><p id="totalSeats">0 / 21</p></div>
+    <div class="card"><h3>ยอดเงินรวม</h3><p id="totalRevenue">0 บาท</p></div>
   </div>
 
-  <div id="modal" onclick="this.style.display='none'">
-    <img id="modalImg" src="">
-    <span class="close-modal">✖ คลิกตรงไหนก็ได้เพื่อปิด</span>
-  </div>
+  <button onclick="exportToExcel()" class="btn-excel">📊 ดาวน์โหลดรายชื่อ (Excel)</button>
+
+  <table id="adminTable">
+    <thead>
+      <tr>
+        <th>ที่นั่ง</th>
+        <th>ชื่อผู้จอง</th>
+        <th>เบอร์โทร</th>
+        <th>สลิป</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      </tbody>
+  </table>
+</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-  // ใช้ Config เดียวกับหน้าจองของคุณ
   const firebaseConfig = {
     apiKey: "AIzaSyD34kENWYBmQsjefAVNyisVq-U2V5ej8b4",
     authDomain: "seat-booking-757dc.firebaseapp.com",
@@ -156,80 +64,50 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // ดึงข้อมูลการจอง เรียงตามเวลาล่าสุด
-  const q = query(collection(db, "bookings"), orderBy("timestamp", "desc"));
+  onSnapshot(query(collection(db, "bookings")), (snapshot) => {
+    let bookings = snapshot.docs.map(doc => doc.data());
 
-  onSnapshot(q, (snapshot) => {
-    const tableBody = document.getElementById("tableBody");
-    tableBody.innerHTML = "";
-    
-    let totalSeatsCount = 0;
-    let totalMoney = 0;
+    // 🆕 1. เรียงลำดับตามเลขที่นั่ง (A1, A2, B1...)
+    bookings.sort((a, b) => a.seat.localeCompare(b.seat, undefined, { numeric: true }));
 
-    snapshot.forEach((snapshotDoc) => {
-      const data = snapshotDoc.data();
-      totalSeatsCount++;
-      totalMoney += 699; // ยอดเงินคำนวณจากที่นั่งละ 699
-
-      const date = data.timestamp ? data.timestamp.toDate().toLocaleString('th-TH') : "-";
-      
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td><span class="seat-badge">${data.seat}</span></td>
-        <td><strong>${data.name}</strong></td>
-        <td><a href="tel:${data.phone}" style="text-decoration:none; color:var(--primary); font-weight:bold;">${data.phone || '-'}</a></td>
-        <td>699 ฿</td>
-        <td style="font-size: 0.85rem; color: #636e72;">${date}</td>
-        <td>
-          <button class="btn btn-view" onclick="viewSlip('${data.slipBase64}')">ดูสลิป</button>
-          <button class="btn btn-delete" onclick="deleteBooking('${snapshotDoc.id}', '${data.seat}')">ลบ</button>
-        </td>
-      `;
-      tableBody.appendChild(row);
-    });
-
-    document.getElementById("totalSeats").innerText = totalSeatsCount + " ที่นั่ง";
-    document.getElementById("totalRevenue").innerText = totalMoney.toLocaleString() + " ฿";
+    renderTable(bookings);
+    updateStats(bookings);
   });
 
-  // ฟังก์ชันดูรูปสลิป
-  window.viewSlip = function(base64) {
-    if(!base64) return alert("ไม่พบไฟล์สลิป");
-    document.getElementById("modalImg").src = base64;
-    document.getElementById("modal").style.display = "block";
+  function renderTable(data) {
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = data.map(b => `
+      <tr>
+        <td><strong>${b.seat}</strong></td>
+        <td>${b.name}</td>
+        <td>${b.phone}</td>
+        <td><button class="btn-view" onclick="window.open('${b.slipBase64}')">ดูสลิป</button></td>
+      </tr>
+    `).join("");
   }
 
-  // ฟังก์ชันลบการจอง
-  window.deleteBooking = async function(id, seat) {
-    if(confirm(`ยืนยันการลบที่นั่ง ${seat} ? (ที่นั่งจะกลับมาว่างให้คนอื่นจองทันที)`)) {
-      try {
-        await deleteDoc(doc(db, "bookings", id));
-      } catch (error) {
-        alert("ลบไม่สำเร็จ กรุณาลองใหม่");
-      }
-    }
+  function updateStats(data) {
+    document.getElementById("totalSeats").innerText = data.length + " / 21";
+    document.getElementById("totalRevenue").innerText = (data.length * 699).toLocaleString() + " บาท";
   }
 
-  // ฟังก์ชันค้นหาในตาราง (ชื่อ หรือ เบอร์โทร)
-  window.filterTable = function() {
-    const input = document.getElementById("searchInput");
-    const filter = input.value.toUpperCase();
-    const tr = document.getElementById("tableBody").getElementsByTagName("tr");
+  // 🆕 2. ฟังก์ชันส่งออกเป็น Excel (CSV)
+  window.exportToExcel = () => {
+    const table = document.getElementById("adminTable");
+    let rows = Array.from(table.querySelectorAll("tr"));
+    let csvContent = "\uFEFF"; // เติม BOM ให้ Excel อ่านภาษาไทยออก
 
-    for (let i = 0; i < tr.length; i++) {
-      let tdName = tr[i].getElementsByTagName("td")[1];
-      let tdPhone = tr[i].getElementsByTagName("td")[2];
-      if (tdName || tdPhone) {
-        let nameValue = tdName.textContent || tdName.innerText;
-        let phoneValue = tdPhone.textContent || tdPhone.innerText;
-        if (nameValue.toUpperCase().indexOf(filter) > -1 || phoneValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
-    }
-  }
+    rows.forEach(row => {
+      const cols = Array.from(row.querySelectorAll("th, td")).map(c => `"${c.innerText.trim()}"`);
+      csvContent += cols.join(",") + "\n";
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "รายชื่อจองพาแลง_2569.csv";
+    link.click();
+  };
 </script>
 </body>
 </html>
