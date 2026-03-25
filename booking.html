@@ -109,49 +109,39 @@
     .qr-section img { width: 180px; border-radius: 10px; margin: 15px 0; border: 1px solid #eee; }
     .custom-file-upload { display: block; padding: 10px; background: #f0f2f5; border: 1px dashed var(--selected); border-radius: 10px; cursor: pointer; margin-bottom: 15px; color: var(--selected); }
     input[type="file"] { display: none; }
-    /* ปรับแต่งโต๊ะ VIP ให้เฉียงและห่างออกไป */
-  .vip-table {
-    position: absolute;
-    right: -80px; /* ห่างออกไปทางขวา */
-    top: 60px;    /* ให้อยู่ระดับเดียวกับแถว A */
-    width: 100px !important;
-    height: 50px !important;
-    background: #ffff00 !important;
-    border: 2px solid #d68c2d !important;
-    transform: rotate(15deg); /* เฉียง 15 องศา */
-    font-size: 0.8rem;
-    box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
-  }
-
-  /* ทำให้ Grid รองรับตำแหน่ง Absolute ของ VIP */
-  .grid {
-    position: relative; 
-    display: grid;
-    grid-template-columns: repeat(3, 1fr) 0.5fr repeat(3, 1fr);
-    gap: 12px 8px;
-    margin-bottom: 25px;
-  }
-
-  /* จัดการแถวสำรอง */
-  .reserve-zone {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-  }
-  .reserve-row {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-    justify-content: center;
-  }
+   /* ที่นั่งสำรองสีส้มเด่นๆ */
   .reserve-seat {
     background: #ff9900 !important;
     color: white !important;
     border-color: #e67e22 !important;
-    width: 65px !important;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+  }
+
+  /* ช่องว่างเพื่อให้ Grid ไม่เบี้ยว */
+  .empty-space {
+    visibility: hidden;
+  }
+
+  /* ตั้งค่า VIP เฉียงข้าง A6 */
+  .vip-table {
+    position: absolute;
+    right: -95px; /* ปรับระยะห่างตรงนี้ */
+    top: 5px;
+    width: 90px !important;
+    height: 50px !important;
+    background: #ffff00 !important;
+    transform: rotate(15deg);
+    border: 2px solid #d68c2d !important;
+    font-size: 0.8rem;
+    z-index: 10;
+  }
+
+  .grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 0.5fr repeat(3, 1fr);
+    gap: 12px 8px;
+    margin-bottom: 25px;
   }
   </style>
 </head>
@@ -191,21 +181,23 @@
   <button class="seat" onclick="changeColor(this)">D1</button>
   <button class="seat" onclick="changeColor(this)">D2</button>
   <button class="seat" onclick="changeColor(this)">D3</button>
-  <div class="aisle"></div> <button class="seat" onclick="changeColor(this)">D4</button>
+  <div class="aisle"></div>
+  <button class="seat" onclick="changeColor(this)">D4</button>
   <button class="seat" onclick="changeColor(this)">D5</button>
   <button class="seat" onclick="changeColor(this)">D6</button>
-<button class="seat" onclick="changeColor(this)">E1</button>
+
+  <button class="seat" onclick="changeColor(this)">E1</button>
   <button class="seat" onclick="changeColor(this)">E2</button>
   <button class="seat" onclick="changeColor(this)">E3</button>
-  <div class="aisle"></div> <button class="seat" onclick="changeColor(this)">E4</button>
+  <div class="aisle"></div>
+  <button class="seat" onclick="changeColor(this)">E4</button>
   <button class="seat" onclick="changeColor(this)">E5</button>
-  <button class="seat" onclick="changeColor(this)">สำรอง1</button>
-<div class="reserve-row" style="justify-content: flex-start; padding-left: 0;">
-    <button class="seat reserve-seat" onclick="changeColor(this)">สำรอง 2</button>
-    <button class="seat reserve-seat" onclick="changeColor(this)">สำรอง 3</button>
-  </div>
-</div>
+  <button class="seat" onclick="changeColor(this)">E6</button>
 
+  <button class="seat reserve-seat" onclick="changeColor(this)">สำรอง 1</button>
+  <button class="seat reserve-seat" onclick="changeColor(this)">สำรอง 2</button>
+  <div class="empty-space"></div> <div class="aisle"></div>       <div class="empty-space"></div> <div class="empty-space"></div>
+  <div class="empty-space"></div>
 </div>
 
 
