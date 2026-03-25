@@ -109,6 +109,50 @@
     .qr-section img { width: 180px; border-radius: 10px; margin: 15px 0; border: 1px solid #eee; }
     .custom-file-upload { display: block; padding: 10px; background: #f0f2f5; border: 1px dashed var(--selected); border-radius: 10px; cursor: pointer; margin-bottom: 15px; color: var(--selected); }
     input[type="file"] { display: none; }
+    /* ปรับแต่งโต๊ะ VIP ให้เฉียงและห่างออกไป */
+  .vip-table {
+    position: absolute;
+    right: -80px; /* ห่างออกไปทางขวา */
+    top: 60px;    /* ให้อยู่ระดับเดียวกับแถว A */
+    width: 100px !important;
+    height: 50px !important;
+    background: #ffff00 !important;
+    border: 2px solid #d68c2d !important;
+    transform: rotate(15deg); /* เฉียง 15 องศา */
+    font-size: 0.8rem;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+  }
+
+  /* ทำให้ Grid รองรับตำแหน่ง Absolute ของ VIP */
+  .grid {
+    position: relative; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 0.5fr repeat(3, 1fr);
+    gap: 12px 8px;
+    margin-bottom: 25px;
+  }
+
+  /* จัดการแถวสำรอง */
+  .reserve-zone {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  .reserve-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+  }
+  .reserve-seat {
+    background: #ff9900 !important;
+    color: white !important;
+    border-color: #e67e22 !important;
+    width: 65px !important;
+    font-size: 0.7rem;
+  }
   </style>
 </head>
 <body>
@@ -125,6 +169,8 @@
   <button class="seat" onclick="changeColor(this)">A4</button>
   <button class="seat" onclick="changeColor(this)">A5</button>
   <button class="seat" onclick="changeColor(this)">A6</button>
+
+  <button class="seat vip-table" onclick="changeColor(this)">โต๊ะ VIP</button>
 
   <button class="seat" onclick="changeColor(this)">B1</button>
   <button class="seat" onclick="changeColor(this)">B2</button>
@@ -148,23 +194,20 @@
   <div class="aisle"></div> <button class="seat" onclick="changeColor(this)">D4</button>
   <button class="seat" onclick="changeColor(this)">D5</button>
   <button class="seat" onclick="changeColor(this)">D6</button>
+<button class="seat" onclick="changeColor(this)">E1</button>
+  <button class="seat" onclick="changeColor(this)">E2</button>
+  <button class="seat" onclick="changeColor(this)">E3</button>
+  <div class="aisle"></div> <button class="seat" onclick="changeColor(this)">E4</button>
+  <button class="seat" onclick="changeColor(this)">E5</button>
+  <button class="seat" onclick="changeColor(this)">สำรอง1</button>
+<div class="reserve-row" style="justify-content: flex-start; padding-left: 0;">
+    <button class="seat reserve-seat" onclick="changeColor(this)">สำรอง 2</button>
+    <button class="seat reserve-seat" onclick="changeColor(this)">สำรอง 3</button>
+  </div>
 </div>
 
-<div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px; align-items: center;">
-  
-  <div style="display: flex; gap: 8px;">
-    <button class="seat" style="background: #ffff00; border-color: #d68c2d;" onclick="changeColor(this)">E1</button>
-    <button class="seat" style="background: #ffff00; border-color: #d68c2d;" onclick="changeColor(this)">E2</button>
-    <button class="seat" style="background: #ffff00; border-color: #d68c2d;" onclick="changeColor(this)">E3</button>
-  </div>
+</div>
 
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 300px;">
-    <button class="seat" style="background: #ff9900; color: white; border-color: #e67e22; font-size: 0.7rem;" onclick="changeColor(this)">วัดปทุม1</button>
-    <button class="seat" style="background: #ff9900; color: white; border-color: #e67e22; font-size: 0.7rem;" onclick="changeColor(this)">วัดปทุม2</button>
-    <button class="seat" style="background: #ff9900; color: white; border-color: #e67e22; font-size: 0.7rem;" onclick="changeColor(this)">สำรอง3</button>
-    <button class="seat" style="background: #ff9900; color: white; border-color: #e67e22; font-size: 0.7rem;" onclick="changeColor(this)">สำรอง4</button>
-    <button class="seat" style="background: #ff9900; color: white; border-color: #e67e22; font-size: 0.7rem;" onclick="changeColor(this)">สำรอง5</button>
-  </div>
 
   <button class="seat" style="background: #ffff00; width: 120px; aspect-ratio: auto; padding: 10px;" onclick="changeColor(this)">โต๊ะ VIP</button>
 </div>
